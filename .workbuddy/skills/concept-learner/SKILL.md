@@ -1,108 +1,120 @@
 ---
 name: concept-learner
-description: This skill should be used when the user provides a concept name and wants systematic, structured learning materials generated for that concept. It produces a Markdown file containing eight sections: definition, core principles, key components, application scenarios, concrete examples, relationships with related concepts, recommended learning path, and references. Use this skill when the user says "学习 X 概念", "教我 X", "用 Skill 学习 X", or anything similar asking for a structured walkthrough of a concept.
+description: This skill should be used when the user wants to systematically learn an arbitrary concept and produce a structured, self-contained HTML study guide. It accepts a concept name (any topic — Agent, RAG, Transformer, Skill, attention, vector database, etc.) as input and generates a 7-section HTML file at learning-materials/<slug>.html, covering learning objectives, core questions, structured explanation, application case, concept disambiguation, self-test questions, and verifiable references. Use this skill when the user says "用 concept-learner 学习 X", "/concept-learner X", "帮我系统学习 X 并输出 HTML 资料", or anything similar asking for a complete, browsable study guide for a concept they don't yet understand.
 agent_created: true
 ---
 
 # 概念学习资料生成 Skill (Concept Learner)
 
-## 用途
+## 一、适用场景
 
-针对任意一个概念（技术 / 学术 / 业务 / 抽象名词），自动生成一份结构化、可复读的学习资料。输出的核心目标：
+本 Skill 用于解决一个具体问题：**让用户对一个陌生的概念，从"听说过"快速达到"能讲、能用、能区分"的水平**。
 
-- 让一个 0 基础读者在 10 分钟内建立对这个概念的"立体认知"；
-- 让一个有基础的读者能快速核对"自己是否真的理解了这个概念"；
-- 资料以 Markdown 形式持久化在 `learnings/<概念名>.md`，方便后续检索、对比、提交到版本库。
+触发场景（满足任一即可）：
 
-## 何时使用
+- 用户说"用 concept-learner 学习 X"或 `/concept-learner X`；
+- 用户希望系统化掌握某个技术 / 学术 / 业务概念；
+- 用户希望为团队沉淀"概念入门手册"，未来可直接分享 HTML 文件。
 
-触发本 Skill 的典型用户意图（任一即可）：
+不适用场景：
 
-- "用 Skill 学习 Agent / 大模型上下文 / Skill"
-- "帮我系统地了解一下 X 这个概念"
-- "生成一份 X 概念的学习资料"
-- "教我 X，并写成文档"
+- 用户只是想做一句话定义查询（直接调用普通问答即可，不必走 Skill）；
+- 用户希望阅读一份**已经存在**的资料（这是查，不是学）。
 
-输入格式约定：`/concept-learner <概念名>` 或者直接说"用 concept-learner 学习 X"。
+## 二、输入信息
 
-## 输入
+| 字段         | 类型   | 必填 | 说明                                                                                          |
+| ------------ | ------ | ---- | --------------------------------------------------------------------------------------------- |
+| `concept`    | string | ✅   | 概念名，如 `Agent`、`RAG`、`Transformer`、`Skill`、`注意力机制` 等任意中英文概念                 |
+| `audience`   | enum   | ❌   | 目标读者：`beginner`（默认）/ `intermediate` / `advanced`                                     |
+| `focus`      | string | ❌   | 用户指定的侧重点，如"工程实现"、"理论基础"、"行业应用"                                          |
+| `output_dir` | path   | ❌   | 默认 `learning-materials/`，文件名 `<slug>.html`（slug：小写、连字符、去空格/特殊字符）          |
 
-| 字段     | 类型   | 必填 | 说明                                                         |
-| -------- | ------ | ---- | ------------------------------------------------------------ |
-| 概念名   | string | 是   | 用户给定的概念，例如 `Agent`、`大模型的上下文`、`Skill`、`RAG` |
-| 侧重点   | string | 否   | 用户可选指定侧重方向，例如"工程实现"、"理论基础"、"行业应用" |
-| 输出路径 | string | 否   | 默认 `learnings/<概念名>.md`（相对当前项目根目录）           |
+如果 `concept` 含义模糊，Skill 应当主动追问用户确认（而不是自行假设）。
 
-## 输出
+## 三、生成步骤
 
-生成一个 Markdown 文件，默认路径为 `<项目根>/learnings/<概念名>.md`。文档结构严格遵循 `references/template.md` 中定义的八个章节，顺序不可调整：
+按以下顺序执行，**每一步都不能跳过**：
 
-1. **概念定义**（Definition）— 一句话定义 + 通俗解释
-2. **核心原理**（Core Principles）— 底层工作机制、最关键的 2-4 条原理
-3. **关键组成**（Key Components）— 构成这个概念的模块/要素清单
-4. **应用场景**（Application Scenarios）— 在哪些领域、被谁、用来做什么
-5. **具体例子**（Examples）— 至少 2 个具体可验证的例子
-6. **与其他概念的关系**（Relationships）— 与相近/依赖/对比概念的关系
-7. **学习路径**（Learning Path）— 从入门到深入的 3-5 阶段建议
-8. **参考资料**（References）— 至少 3 条权威来源链接
+### Step 1：明确范围
+确认概念边界，避免做"百科式"资料。例如学习"Agent"时，要主动声明本文**只讨论** LLM-based Agent，**不涉及**强化学习中的 RL Agent。
 
-## 执行流程
+### Step 2：检索权威资料
+**资料来源要求**（必须满足）：
+1. 至少 3 条**可点击**的 URL；
+2. 至少 1 条**官方来源**（如模型方文档、维基百科、论文 PDF）；
+3. 不接受任何"AI 自行生成的不存在链接"——若检索不到，**宁可少写也不要编**；
+4. 使用 `WebSearch` 检索核心定义与最新共识；必要时使用 `WebFetch` 抓取原始页面。
 
-按照以下顺序执行，每一步都不要跳过：
+### Step 3：构建学习目标与核心问题
+- **学习目标**：3-5 条，用"学完后能做 X"而不是"学完后知道 X"；
+- **核心问题**：3-5 个"读者读完后应该能自己回答"的问题。
 
-### Step 1: 解析输入
+### Step 4：撰写结构化解释（个人理解）
+- 不是教科书复述，而是带着**个人理解**写：用类比、举反例、点出"我当初误解的地方"；
+- 必须避免整段照搬 AI 对话结果；
+- 解释"为什么这样设计"而不只是"它是什么"。
 
-确认概念名（必要时询问用户）；如果用户指定了侧重点/输出路径，记录下来。
+### Step 5：设计具体应用场景
+- 给出一个**真实可验证**的场景（公司名 / 产品名 / 论文标题 / 代码片段）；
+- 说明场景的输入、做了什么、产出什么、为什么有效。
 
-### Step 2: 信息检索
+### Step 6：辨析容易混淆的边界
+- 至少 3 条"容易混淆 / 用错"的边界；
+- 每条包含：本概念的边界 vs 误用方式 + 如何判断。
 
-为保证资料准确性，必须主动检索信息，而不是仅凭模型先验：
+### Step 7：设计自测问题
+- 至少 4 道题，覆盖"是什么 / 为什么 / 怎么用 / 怎么区分"四个层级；
+- 答案可藏在 `<details>` 标签里，方便读者先做后查。
 
-1. 使用 `WebSearch` 检索概念的核心定义、最新共识；
-2. 必要时使用 `WebFetch` 拉取权威页面（官方文档、维基百科、知名博客）作为参考；
-3. 至少收集 3 条可信来源。
+### Step 8：写入 HTML 文件
+- 输出路径：`learning-materials/<slug>.html`；
+- 单一 HTML 文件，含内嵌 CSS，**不依赖外部资源**（CDN 例外：Mermaid 用于关系图）；
+- 在页脚注明"由 concept-learner Skill 生成于 YYYY-MM-DD"与人类核查说明。
 
-### Step 3: 按模板生成内容
+### Step 9：自检（**强制，不可跳过**）
 
-读取 `references/template.md` 模板，按八个章节填充内容。要求：
+## 四、输出结构
 
-- **概念定义**：先给一行精炼定义，再用"通俗解释"段落用比喻/类比说明；
-- **核心原理**：每条原理独立成段，避免空话，要说明"为什么这样"；
-- **关键组成**：用列表呈现，每条配 1-2 句解释；
-- **应用场景**：至少 3 个真实场景，避免泛泛而谈；
-- **具体例子**：例子必须可验证、可复现，必要时附代码片段或示意图描述；
-- **与其他概念的关系**：明确区分"相似概念"、"前置概念"、"后续概念"；
-- **学习路径**：分阶段列出，每阶段说明"读什么 / 做什么 / 怎么验证掌握"；
-- **参考资料**：用 Markdown 链接，给出标题、来源、URL。
+生成的 HTML 文件包含 7 个章节，顺序不可调整：
 
-### Step 4: 持久化
+| # | 章节 | 用途 |
+| --- | --- | --- |
+| 1 | 学习目标（Objectives） | 读者学完后能做什么 |
+| 2 | 核心问题（Core Questions） | 引导主动阅读 |
+| 3 | 个人理解（My Interpretation） | 带个人视角的结构化解释 |
+| 4 | 应用案例（Application Case） | 一个真实可验证的例子 |
+| 5 | 概念辨析（Disambiguation） | 容易混淆的边界 |
+| 6 | 自测问题（Self-test） | 检验掌握程度 |
+| 7 | 参考来源（References） | 可点击的权威链接 |
 
-将生成的内容写入 `<项目根>/learnings/<概念名>.md`，确保：
+> 模板见 `references/template.html`。**生成时必须严格遵循**，仅可改写文案、不可改章节顺序与数量。
 
-- 目录存在（不存在则创建）；
-- 文件名使用小写、连字符分隔，去掉空格和特殊字符；
-- 文件首行为 H1 标题（`# <概念名>`）；
-- 字符编码为 UTF-8。
+## 五、资料来源要求（硬性规则）
 
-### Step 5: 自我检查
+1. **必须真实**：每条参考链接都要可以打开，标题与内容一致；
+2. **必须可核查**：链接指向公开可访问的页面；
+3. **拒绝编造**：不允许出现 `example.com`、`http://...` 这类占位；
+4. **优先官方**：官方文档 / 论文 / 维基百科优先级 > 个人博客；
+5. **标注日期**：若来源页面会随时间变动（如官方博客），注明访问日期。
 
-输出前对照以下检查清单：
+## 六、自检要求（强制清单）
 
-- [ ] 八个章节是否齐全？
-- [ ] 每个章节是否有实质性内容（非空话、非模板套话）？
-- [ ] 例子是否具体可验证？
-- [ ] 参考资料是否真实可达？
-- [ ] 文件是否已写入磁盘？
+生成完成后，**必须**对照以下清单逐项打勾：
 
-如有问题，迭代修正后再交付。
+- [ ] 7 个章节是否齐全且顺序正确？
+- [ ] "学习目标"是否用"能做"而不是"能知道"？
+- [ ] "个人理解"是否带主观视角（不是百科复述）？
+- [ ] "应用案例"是否真实可验证（包含公司 / 产品 / 代码）？
+- [ ] "概念辨析"至少 3 条？
+- [ ] "自测问题"至少 4 道且答案可隐藏？
+- [ ] "参考来源"链接是否真的能打开？（抽样点击 1-2 个验证）
+- [ ] HTML 文件是否单文件可独立打开？无 404 资源？
+- [ ] 移动端阅读体验是否正常（字体、行距不溢出）？
+- [ ] 文件名是否 `learning-materials/<slug>.html` 且 slug 规范？
 
-## 引用资源
+如有问题，迭代修正后再交付。**自检未通过不得交付**。
 
-- `references/template.md` — 学习资料的标准模板，生成时严格遵循。
+## 七、引用资源
 
-## 注意事项
-
-- 不要照搬模型先验；对于 AI / LLM / Agent 等快速演进的领域，必须依赖最新检索结果；
-- 不要生成虚假参考资料或编造 URL；
-- 概念中文名 / 英文名并列时，优先用用户给定的形式作为 H1 标题；
-- 默认输出位置在 `<项目根>/learnings/`，若项目根未确定，请先向用户确认。
+- `references/template.html` — 7 章节 HTML 模板，生成时严格遵循。

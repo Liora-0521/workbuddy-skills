@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><概念名> · 学习指南</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --fg:#1f2328; --muted:#6b7280;
+    --accent:#2563eb; --accent-2:#7c3aed; --warn:#b45309;
+    --card:#ffffff; --border:#e5e7eb; --code:#f6f8fa;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;line-height:1.7;font-size:16px}
+  .wrap{max-width:880px;margin:0 auto;padding:48px 24px 80px}
+  header.hero{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
+  .eyebrow{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:13px;font-weight:600;letter-spacing:.04em}
+  h1{font-size:38px;line-height:1.2;margin:16px 0 8px}
+  .one-line{color:var(--muted);font-size:18px;margin:0}
+  section{margin:36px 0}
+  h2{font-size:24px;margin:0 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:18px;margin:24px 0 8px;color:var(--accent-2)}
+  ol,ul{padding-left:22px}
+  li{margin:6px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+  pre{background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto;border:1px solid var(--border)}
+  pre code{background:transparent;padding:0}
+  blockquote{border-left:4px solid var(--accent-2);background:#f5f3ff;margin:14px 0;padding:10px 16px;border-radius:0 8px 8px 0;color:#3b2a6e}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:12px 0}
+  .callout-warn{border-left:4px solid var(--warn);background:#fef3c7;color:#7c2d12}
+  details{margin:10px 0;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--card)}
+  details>summary{cursor:pointer;font-weight:600}
+  table{width:100%;border-collapse:collapse;margin:14px 0}
+  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:#f3f4f6}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .meta{color:var(--muted);font-size:14px;margin-top:8px}
+  footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  @media (max-width:600px){h1{font-size:28px}.wrap{padding:24px 16px 60px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">概念学习指南</span>
+  <h1><概念名></h1>
+  <p class="one-line">一句话定义（不超过 30 字，用粗体强调核心词）。</p>
+  <p class="meta">由 concept-learner Skill 生成 · 人工核查与修改</p>
+</header>
+
+<section>
+  <h2>1. 学习目标</h2>
+  <p>学完本文后，你应当能够：</p>
+  <ol>
+    <li>用一段话向同行解释 <概念名> 是什么、不是什么；</li>
+    <li>独立完成 / 描述一个使用 <概念名> 的小项目；</li>
+    <li>区分 <概念名> 与至少 2 个相似概念；</li>
+    <li>指出 <概念名> 的 1-2 个使用边界或坑；</li>
+    <li>（可选）阅读相关论文 / 官方文档的入门章节。</li>
+  </ol>
+</section>
+
+<section>
+  <h2>2. 核心问题</h2>
+  <p>阅读时建议带着这些问题：</p>
+  <ul>
+    <li><概念名> 解决的是什么问题？为什么旧方案不够好？</li>
+    <li>它的关键模块 / 机制是什么？缺一不可的是哪一块？</li>
+    <li>它和最像它的概念 X 区别在哪？什么情况下应该选 X 而不是 <概念名>？</li>
+    <li>它的边界是什么？什么场景下不该用它？</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3. 个人理解</h2>
+
+  <h3>3.1 它是什么</h3>
+  <blockquote><一句话核心定义。></blockquote>
+  <p><个人视角解释：用一个日常类比 / 比喻 + 一段"我当初误解的地方"。></p>
+
+  <h3>3.2 核心机制 / 组成</h3>
+  <ul>
+    <li><strong>机制 1</strong>：……</li>
+    <li><strong>机制 2</strong>：……</li>
+    <li><strong>机制 3</strong>：……</li>
+  </ul>
+
+  <h3>3.3 为什么这样设计</h3>
+  <p><解释背后的"为什么"——历史约束 / 工程权衡 / 用户痛点。></p>
+</section>
+
+<section>
+  <h2>4. 应用案例</h2>
+  <div class="card">
+    <p><strong>案例：<真实可验证的案例标题></strong></p>
+    <p><场景描述：公司 / 产品 / 论文 / 开源项目，发生了什么，用了 <概念名> 的哪一部分，效果如何。></p>
+    <p><可选代码片段：></p>
+<pre><code>// 必要时附代码片段或伪代码
+</code></pre>
+  </div>
+</section>
+
+<section>
+  <h2>5. 概念辨析</h2>
+  <div class="callout-warn card">
+    <p><strong>容易踩坑 1：<边界名称></strong></p>
+    <p><误用方式>。如何判断：……</p>
+  </div>
+  <div class="callout-warn card">
+    <p><strong>容易踩坑 2：<边界名称></strong></p>
+    <p><误用方式>。如何判断：……</p>
+  </div>
+  <div class="callout-warn card">
+    <p><strong>容易踩坑 3：<边界名称></strong></p>
+    <p><误用方式>。如何判断：……</p>
+  </div>
+</section>
+
+<section>
+  <h2>6. 自测问题</h2>
+
+  <details>
+    <summary>Q1（是什么）：用一句话定义 <概念名>。</summary>
+    <p>答案：……</p>
+  </details>
+
+  <details>
+    <summary>Q2（为什么）：<概念名> 相比前一代方案，最大的改进点是什么？</summary>
+    <p>答案：……</p>
+  </details>
+
+  <details>
+    <summary>Q3（怎么用）：给出一个具体场景，说明如何使用 <概念名> 解决。</summary>
+    <p>答案：……</p>
+  </details>
+
+  <details>
+    <summary>Q4（怎么区分）：<概念名> 与 X 的核心区别是什么？</summary>
+    <p>答案：……</p>
+  </details>
+</section>
+
+<section>
+  <h2>7. 参考来源</h2>
+  <ol>
+    <li><a href="https://real-link-1" target="_blank" rel="noopener">标题 1</a> — 来源说明（官方文档 / 论文 / 博客） · 访问日期 YYYY-MM-DD</li>
+    <li><a href="https://real-link-2" target="_blank" rel="noopener">标题 2</a> — 来源说明 · 访问日期 YYYY-MM-DD</li>
+    <li><a href="https://real-link-3" target="_blank" rel="noopener">标题 3</a> — 来源说明 · 访问日期 YYYY-MM-DD</li>
+  </ol>
+</section>
+
+<footer>
+  由 concept-learner Skill 生成于 <YYYY-MM-DD> · 内容经过人工核查与修改 · 反馈请开 issue。
+</footer>
+
+</div>
+</body>
+</html>

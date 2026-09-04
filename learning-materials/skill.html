@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skill · 学习指南</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --fg:#1f2328; --muted:#6b7280;
+    --accent:#2563eb; --accent-2:#7c3aed; --warn:#b45309;
+    --card:#ffffff; --border:#e5e7eb; --code:#f6f8fa;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;line-height:1.7;font-size:16px}
+  .wrap{max-width:880px;margin:0 auto;padding:48px 24px 80px}
+  header.hero{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
+  .eyebrow{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:13px;font-weight:600;letter-spacing:.04em}
+  h1{font-size:38px;line-height:1.2;margin:16px 0 8px}
+  .one-line{color:var(--muted);font-size:18px;margin:0}
+  section{margin:36px 0}
+  h2{font-size:24px;margin:0 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:18px;margin:24px 0 8px;color:var(--accent-2)}
+  ol,ul{padding-left:22px}
+  li{margin:6px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+  pre{background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto;border:1px solid var(--border)}
+  pre code{background:transparent;padding:0}
+  blockquote{border-left:4px solid var(--accent-2);background:#f5f3ff;margin:14px 0;padding:10px 16px;border-radius:0 8px 8px 0;color:#3b2a6e}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:12px 0}
+  .callout-warn{border-left:4px solid var(--warn);background:#fef3c7;color:#7c2d12}
+  details{margin:10px 0;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--card)}
+  details>summary{cursor:pointer;font-weight:600}
+  table{width:100%;border-collapse:collapse;margin:14px 0}
+  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:#f3f4f6}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .meta{color:var(--muted);font-size:14px;margin-top:8px}
+  footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  @media (max-width:600px){h1{font-size:28px}.wrap{padding:24px 16px 60px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">概念学习指南 · 03</span>
+  <h1>Skill</h1>
+  <p class="one-line">装在 Agent 里的"<strong>岗位手册</strong>"，把"如何做某类事"打包成可分享的结构化指令。</p>
+  <p class="meta">由 concept-learner Skill 生成 · 人工核查与修改 · 2026-09-04</p>
+</header>
+
+<section>
+  <h2>1. 学习目标</h2>
+  <p>学完本文后，你应当能够：</p>
+  <ol>
+    <li>用一段话向同行解释 <strong>Skill</strong> 是什么，并指出它和 Agent / Command / MCP 的边界；</li>
+    <li>独立创建一个含 SKILL.md + references/ 的简单 Skill 并装进 Claude Code 试用；</li>
+    <li>区分 Skill 与 Agent / Command / Subagent / Rule / MCP Server 这 5 个易混概念；</li>
+    <li>指出 Skill 的 1-2 个使用边界（比如"上下文窗口紧张时不要装 20 个 Skill"）；</li>
+    <li>读懂 SKILL.md frontmatter 的 name / description / agent_created 字段含义。</li>
+  </ol>
+</section>
+
+<section>
+  <h2>2. 核心问题</h2>
+  <p>阅读时建议带着这些问题：</p>
+  <ul>
+    <li>Skill 解决的是什么问题？为什么 Agent 自己不够用？</li>
+    <li>它的 4 个可选部分（SKILL.md / scripts / references / assets）里，缺哪一块它就只是个"prompt 文件"？</li>
+    <li>它和最像它的概念 Agent 区别在哪？什么场景该用 Agent 而不是 Skill？</li>
+    <li>它的边界是什么？装多少 Skill 会让上下文爆掉？</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3. 个人理解</h2>
+
+  <h3>3.1 它是什么</h3>
+  <blockquote>Skill 是一种以 SKILL.md 为核心的结构化指令包，给 Agent 提供针对特定任务类型的标准化工作流程、知识与最佳实践。</blockquote>
+  <p><strong>我自己的理解</strong>：把 Agent 想象成一个<strong>什么都能干的实习生</strong>，Skill 则是递给他的《岗位操作手册》——给他《代码审查手册》，他就成了"代码审查专员"；给他《SQL 调优手册》，他就成了"SQL 调优专员"。<strong>同一份手册可以在不同的 Agent（Claude Code / Codex CLI / Gemini CLI）间共享</strong>——这是 Skill 最大的杠杆。</p>
+  <p><strong>我当初的误解</strong>：以为 Skill 是"给 Agent 的插件 / API"。其实 Skill 是<strong>纯文本 Markdown</strong>，不需要服务器、不需要权限、不需要 SDK——只要放在 <code>~/.claude/skills/</code> 或 <code>.workbuddy/skills/</code> 下，Agent 启动时就会发现它。</p>
+
+  <h3>3.2 核心机制 / 组成</h3>
+  <ul>
+    <li><strong>SKILL.md（必需）</strong>：Skill 的核心文件。YAML frontmatter（<code>name</code> + <code>description</code> 决定触发）+ Markdown 正文（工作流指令）。</li>
+    <li><strong>scripts/（可选）</strong>：可执行脚本（Python / Bash）。用于确定性操作（如 PDF 旋转、格式转换），可不读入上下文直接执行。</li>
+    <li><strong>references/（可选）</strong>：参考文档（数据库 schema、API 文档、政策文件）。按需加载，避免 SKILL.md 过于臃肿。</li>
+    <li><strong>assets/（可选）</strong>：输出资产（logo、PPT 模板、前端脚手架）。不读入上下文但参与最终产物。</li>
+    <li><strong>渐进式披露（Progressive Disclosure）</strong>：三层加载——metadata（~100 词，恒在）→ SKILL.md 正文（<5K 词，触发时加载）→ 资源（按需）。这是 Skill 能"装很多"的关键工程设计。</li>
+    <li><strong>语义触发</strong>：与 <code>/command</code> 的显式触发不同，Skill 由<strong>语义匹配</strong>自动触发——用户说"这段代码太乱了"，Agent 会自动调用代码格式化 Skill。</li>
+  </ul>
+
+  <h3>3.3 为什么这样设计</h3>
+  <p>Skill 是被"通用 Agent 不够专"这个痛点逼出来的：</p>
+  <ol>
+    <li><strong>通用 Agent 在每个领域都是 60-70 分</strong>——它知道 SQL 是什么，但不如 DBA 调得好；知道代码审查，但不如资深工程师挑得准；</li>
+    <li><strong>Prompt 工程不能跨对话复用</strong>——同一个团队今天写的好 prompt，明天换个项目就没了；</li>
+    <li><strong>传统 SDK / 插件门槛太高</strong>——不是每个会写代码的人都能发布 SDK，但<strong>每个人都能写 Markdown</strong>。</li>
+  </ol>
+  <p>Skill 把"领域能力"的载体从"SDK / API"降维到"文档 / Markdown"，是 AI 工具平民化的关键一步。</p>
+</section>
+
+<section>
+  <h2>4. 应用案例</h2>
+  <div class="card">
+    <p><strong>案例：Anthropic 官方 Claude Skills + Claude Code 实战</strong></p>
+    <p>Anthropic 在 2025 年 10 月推出 Skills 概念，并把官方示例 Skill 直接挂在 <a href="https://github.com/anthropics/skills" target="_blank" rel="noopener">github.com/anthropics/skills</a>，包含：</p>
+    <ul>
+      <li><strong>PDF Skill</strong>：让 Agent 能正确读取、合并、提取 PDF 内容（包含 scripts/ 下的 <code>pdf_rotate.py</code> 等脚本）；</li>
+      <li><strong>Doc Skill</strong>：让 Agent 按 Anthropic 的格式规范生成 Word / Markdown 文档；</li>
+      <li><strong>Brand Guidelines Skill</strong>：让 Agent 在写内容时自动遵循品牌指南（assets/ 下放 logo、字体）。</li>
+    </ul>
+    <p>开发者只需要 <code>git clone</code> 到 <code>~/.claude/skills/</code>，重启 Claude Code 就能用——不需要任何 SDK / API key。</p>
+    <p>本仓库的 <code>concept-learner</code> Skill 也是同样的设计：放在 <code>.workbuddy/skills/concept-learner/</code>，WorkBuddy 启动时自动发现，调用时按 frontmatter 里的 description 语义匹配触发。</p>
+    <p>来源：<a href="https://claude.com/blog/skills-explained" target="_blank" rel="noopener">Claude Skills Explained — Anthropic</a>、<a href="https://findskills.co/vs/claude-skills-vs-agents" target="_blank" rel="noopener">Claude Skills vs Agents — findskills.co</a>。</p>
+  </div>
+</section>
+
+<section>
+  <h2>5. 概念辨析</h2>
+
+  <div class="callout-warn card">
+    <p><strong>边界 1：Skill ≠ Agent</strong></p>
+    <p><em>误用方式</em>：以为"我装了一个 Skill，所以我的 Claude 变成另一个 Agent 了"。事实上 Skill 是<strong>指令文件</strong>（告诉现有 Agent 怎么做），不是<strong>运行时</strong>（能推理、能执行）。脱离 Agent 的 Skill 没有任何作用。</p>
+    <p><em>如何判断</em>：如果删掉 Skill，Agent 仍然能跑（只是少了某个专项能力），说明它是 Skill；如果删掉就没法跑，那它是 Agent（或 Agent 的核心组件）。</p>
+  </div>
+
+  <div class="callout-warn card">
+    <p><strong>边界 2：Skill ≠ Command（Slash Command）</strong></p>
+    <p><em>误用方式</em>：把 Skill 当成 Command 的高配版。其实触发方式完全不同：</p>
+    <ul>
+      <li><strong>Command</strong>：用户必须显式输入 <code>/cmd</code> 才运行；</li>
+      <li><strong>Skill</strong>：用户说"代码太乱了"，Agent 自动匹配运行。</li>
+    </ul>
+    <p><em>如何判断</em>：用户是否需要记忆命令名？需要 → Command；不需要（语义触发）→ Skill。简单提示词封装用 Command；复杂能力封装用 Skill。</p>
+  </div>
+
+  <div class="callout-warn card">
+    <p><strong>边界 3：Skill ≠ MCP Server</strong></p>
+    <p><em>误用方式</em>：把 Skill 和 MCP 当成同一层。事实是<strong>正交的两层</strong>：</p>
+    <ul>
+      <li><strong>MCP Server</strong>：给 Agent 提供<strong>工具和数据接入能力</strong>（让 Agent 能做 X，比如查数据库）；</li>
+      <li><strong>Skill</strong>：给 Agent 提供<strong>流程和知识</strong>（让 Agent 知道何时 / 怎么做 X，比如"客户投诉时先查订单再升级"）。</li>
+    </ul>
+    <p><em>如何判断</em>：如果缺了它 Agent 就无法访问外部资源 → MCP；如果缺了它 Agent 还能跑，只是不专业 → Skill。</p>
+  </div>
+
+  <div class="callout-warn card">
+    <p><strong>边界 4：装太多 Skill 会撑爆上下文</strong></p>
+    <p><em>误用方式</em>：因为 Skill "好装"，就一口气装 20 个。每个 Skill 的 frontmatter（~100 词）会<strong>始终</strong>在上下文里，SKILL.md 正文（<5K 词）会在被触发时加载。装 10 个 Skill ≈ 始终占 1K Token，被触发时还可能再占 50K。</p>
+    <p><em>如何判断</em>：把"我现在会用到的" Skill 留 3-5 个；其余归档到一个 <code>skills-archive/</code> 目录，需要时再启用。</p>
+  </div>
+</section>
+
+<section>
+  <h2>6. 自测问题</h2>
+
+  <details>
+    <summary>Q1（是什么）：用一句话定义 Skill。</summary>
+    <p><strong>答案</strong>：Skill 是一种以 SKILL.md 为核心的结构化指令包，为 Agent 提供特定任务类型的工作流、知识与最佳实践，通过渐进式披露管理上下文消耗。</p>
+  </details>
+
+  <details>
+    <summary>Q2（为什么）：Skill 相比传统 Prompt 的优势是什么？</summary>
+    <p><strong>答案</strong>：可<strong>跨对话复用</strong>、可<strong>跨 Agent 共享</strong>（Claude Code / Codex CLI / Gemini CLI 通用）、可<strong>语义触发</strong>（不必记忆命令名）、可<strong>分层加载</strong>（不爆上下文）。</p>
+  </details>
+
+  <details>
+    <summary>Q3（怎么用）：给出一个具体场景，说明如何用 Skill 解决。</summary>
+    <p><strong>答案</strong>：给团队做"代码审查 Skill"——把团队多年沉淀的审查规范（命名、安全、可测性、性能）写成 SKILL.md（含 examples + checklists），放在 <code>.workbuddy/skills/code-reviewer/</code>。Claude Code 启动时会自动发现它，每次写完代码 Agent 都会自动按这份手册审查。</p>
+  </details>
+
+  <details>
+    <summary>Q4（怎么区分）：Skill 与 Command 的核心区别是什么？</summary>
+    <p><strong>答案</strong>：Command 是<strong>显式触发</strong>（用户输入 <code>/cmd</code>）、封装<strong>简单提示词</strong>；Skill 是<strong>语义触发</strong>（Agent 自动匹配）、封装<strong>复杂能力</strong>（含 scripts / references / assets）。</p>
+  </details>
+</section>
+
+<section>
+  <h2>7. 参考来源</h2>
+  <ol>
+    <li><a href="https://claude.com/blog/skills-explained" target="_blank" rel="noopener">Claude Skills Explained — Anthropic</a> · 官方对 Skill 的权威解释 · 访问日期 2026-09-04</li>
+    <li><a href="https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/" target="_blank" rel="noopener">A practical guide to building agents — OpenAI</a> · 涉及 Skill 与 Agent 的协作 · 访问日期 2026-09-04</li>
+    <li><a href="https://findskills.co/vs/claude-skills-vs-agents" target="_blank" rel="noopener">Claude Skills vs Agents — findskills.co</a> · Skill 与 Agent 的对比分析 · 访问日期 2026-09-04</li>
+    <li><a href="https://claudeblattman.com/system/agents-vs-skills/" target="_blank" rel="noopener">Agents vs Skills — claudeblattman.com</a> · Skill 与 Agent 在 Claude Code 中的具体差异 · 访问日期 2026-09-04</li>
+    <li><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents — Anthropic</a> · Agent 与 Skill 协同设计的官方模式 · 访问日期 2026-09-04</li>
+  </ol>
+</section>
+
+<footer>
+  由 concept-learner Skill 生成于 2026-09-04 · 内容经过人工核查与修改（区分 Skill vs Agent/Command/MCP、补充"装太多撑爆上下文"边界、核对所有链接） · 反馈请开 issue。
+</footer>
+
+</div>
+</body>
+</html>

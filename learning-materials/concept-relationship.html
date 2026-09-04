@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>三个概念的关系 · Agent × 上下文 × Skill</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --fg:#1f2328; --muted:#6b7280;
+    --accent:#2563eb; --accent-2:#7c3aed; --warn:#b45309;
+    --good:#15803d;
+    --card:#ffffff; --border:#e5e7eb; --code:#f6f8fa;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;line-height:1.7;font-size:16px}
+  .wrap{max-width:960px;margin:0 auto;padding:48px 24px 80px}
+  header.hero{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
+  .eyebrow{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:13px;font-weight:600;letter-spacing:.04em}
+  h1{font-size:38px;line-height:1.2;margin:16px 0 8px}
+  .one-line{color:var(--muted);font-size:18px;margin:0}
+  section{margin:36px 0}
+  h2{font-size:24px;margin:0 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:18px;margin:24px 0 8px;color:var(--accent-2)}
+  ol,ul{padding-left:22px}
+  li{margin:6px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+  pre{background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto;border:1px solid var(--border);font-size:14px}
+  pre code{background:transparent;padding:0}
+  blockquote{border-left:4px solid var(--accent-2);background:#f5f3ff;margin:14px 0;padding:10px 16px;border-radius:0 8px 8px 0;color:#3b2a6e}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:12px 0}
+  .callout-good{border-left:4px solid var(--good);background:#ecfdf5;color:#14532d}
+  .mermaid-block{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px;margin:14px 0;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;margin:14px 0}
+  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:#f3f4f6}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .meta{color:var(--muted);font-size:14px;margin-top:8px}
+  footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  @media (max-width:600px){h1{font-size:28px}.wrap{padding:24px 16px 60px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>document.addEventListener('DOMContentLoaded',()=>{mermaid.initialize({startOnLoad:true,theme:'default',securityLevel:'loose'});});</script>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">概念关系 · 关系图谱</span>
+  <h1>Agent × 大模型的上下文 × Skill</h1>
+  <p class="one-line">三个概念不是孤立的——<strong>上下文决定 Agent 能跑多远</strong>，<strong>Skill 决定 Agent 能做多专</strong>。</p>
+  <p class="meta">由 concept-learner Skill 生成 · 人工核查与修改 · 2026-09-04</p>
+</header>
+
+<section>
+  <h2>1. 一句话总结</h2>
+  <ul>
+    <li><strong>Agent</strong> 是<strong>运行时</strong>——能推理、能调用工具、能循环；</li>
+    <li><strong>大模型的上下文</strong> 是 Agent 的<strong>物理瓶颈</strong>——决定它能"记住"多少、"看到"多长；</li>
+    <li><strong>Skill</strong> 是 Agent 的<strong>岗位手册</strong>——把"如何做某类事"打包成可复用的结构化指令。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>2. 总体关系图</h2>
+  <div class="mermaid-block">
+<pre class="mermaid">
+flowchart TB
+    subgraph Env["运行环境"]
+        Tools["工具集<br/>Search / Code / API / Browser"]
+        Memory["记忆系统<br/>短期 + 长期"]
+    end
+
+    subgraph Runtime["Agent 运行时"]
+        LLM["LLM 大脑<br/>推理 + 决策"]
+        Loop["控制器<br/>观察→规划→行动→反馈"]
+    end
+
+    subgraph Knowledge["知识与指令"]
+        Skill["Skill<br/>岗位手册"]
+        Prompt["Prompt<br/>即时指令"]
+    end
+
+    subgraph Physics["物理约束"]
+        Ctx["上下文窗口<br/>Token 容量"]
+        Cost["算力 / 显存"]
+    end
+
+    LLM -->|"受限于"| Ctx
+    Loop -->|"每一步塞入"| Ctx
+    Skill -->|"加载为上下文"| Ctx
+    Skill -.->|"指导"| Loop
+    Skill -.->|"扩展知识"| LLM
+    Loop -->|"调用"| Tools
+    Loop -->|"读写"| Memory
+    Ctx -->|"被 Cost 约束"| Cost
+
+    classDef runtime fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
+    classDef knowledge fill:#f5f3ff,stroke:#7c3aed,stroke-width:2px,color:#3b2a6e
+    classDef physics fill:#fef3c7,stroke:#b45309,stroke-width:2px,color:#7c2d12
+    classDef env fill:#ecfdf5,stroke:#15803d,stroke-width:2px,color:#14532d
+
+    class LLM,Loop runtime
+    class Skill,Prompt knowledge
+    class Ctx,Cost physics
+    class Tools,Memory env
+</pre>
+  </div>
+  <p>关键观察：</p>
+  <ul>
+    <li><strong>Skill</strong> 和 <strong>Prompt</strong> 最终都会被加载进 <strong>上下文</strong>，参与 LLM 的推理；</li>
+    <li><strong>上下文</strong> 不是无限制的——它受 <strong>算力 / 显存</strong> 约束；</li>
+    <li><strong>Agent</strong> 的循环每一步都在"消耗"上下文（系统提示 + 历史动作 + 工具结果）。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3. 上下文如何影响 Agent 的工作</h2>
+
+  <h3>3.1 影响的三个层面</h3>
+  <div class="mermaid-block">
+<pre class="mermaid">
+flowchart LR
+    A["上下文窗口"] -->|"1. 信息密度"| B["Agent 能"看到"什么"]
+    A -->|"2. 决策可靠性"| C["Agent 决策的稳定性"]
+    A -->|"3. 循环长度"| D["Agent 能连续做几步"]
+    B --> E["任务质量"]
+    C --> E
+    D --> F["任务复杂度"]
+</pre>
+  </div>
+
+  <h3>3.2 具体表现</h3>
+  <table>
+    <thead>
+      <tr><th>窗口表现</th><th>Agent 的工作影响</th><th>工程对策</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>窗口太小（如 4K）</td>
+        <td>多轮对话失忆；长代码任务必须切片；Agent 循环跑不到 5 步就崩</td>
+        <td>RAG 压缩信息；短期记忆摘要；限制单步长度</td>
+      </tr>
+      <tr>
+        <td>窗口适中（如 32K-128K）</td>
+        <td>能装下中等代码库；中等复杂任务够用；Agent 循环可跑到 10-20 步</td>
+        <td>默认大多数 Agent 的工作区间</td>
+      </tr>
+      <tr>
+        <td>窗口很大（如 1M+）</td>
+        <td>能装整本书 / 整部电影；Agent 循环可跑 50+ 步；但<strong>Lost in the Middle</strong> 出现</td>
+        <td>重要信息放开头 / 结尾；用结构化提示；必要时配合 RAG</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout-good card">
+    <p><strong>关键洞察</strong>：上下文窗口 <strong>≠ 有效信息量</strong>。窗口大只是"能装"，能不能用好要看位置编码泛化能力（RoPE / YaRN）、任务设计（重要信息摆放位置）、以及 KV Cache 工程优化。</p>
+  </div>
+</section>
+
+<section>
+  <h2>4. Skill 如何沉淀可复用的任务知识</h2>
+
+  <h3>4.1 Skill 沉淀的"知识"长什么样</h3>
+  <div class="mermaid-block">
+<pre class="mermaid">
+flowchart TB
+    subgraph Personal["个人 Prompt（一次性）"]
+        P1["每次对话重新写"]
+        P2["散落在聊天记录里"]
+        P3["无法跨 Agent 复用"]
+    end
+
+    subgraph Skill["Skill（沉淀后）"]
+        S1["一份 SKILL.md 永久生效"]
+        S2["可装进任意 Agent"]
+        S3["含 scripts / references / assets"]
+    end
+
+    subgraph Org["团队 / 开源 Skill（规模化后）"]
+        O1["Git 仓库管理"]
+        O2["语义触发，无需记忆命令"]
+        O3["形成组织的过程资产"]
+    end
+
+    Personal -->|"写一次"| Skill
+    Skill -->|"提交到 Git"| Org
+</pre>
+  </div>
+
+  <h3>4.2 Skill 沉淀了哪些类型的知识</h3>
+  <table>
+    <thead>
+      <tr><th>知识类型</th><th>在 Skill 里的载体</th><th>例子</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>领域术语 / 概念库</strong></td>
+        <td>SKILL.md 正文 + references/</td>
+        <td>本仓库的 <code>concept-learner</code> Skill 就沉淀了"如何系统学一个概念"的方法论</td>
+      </tr>
+      <tr>
+        <td><strong>工作流 SOP</strong></td>
+        <td>SKILL.md 的"执行流程"章节</td>
+        <td>"客户投诉" Skill：先查订单 → 看历史 → 升级条件判断 → 通知</td>
+      </tr>
+      <tr>
+        <td><strong>工具脚本（确定性操作）</strong></td>
+        <td>scripts/ 下的 Python / Bash</td>
+        <td>"PDF 处理" Skill：<code>pdf_rotate.py</code>、<code>pdf_merge.py</code></td>
+      </tr>
+      <tr>
+        <td><strong>领域参考资料</strong></td>
+        <td>references/ 下的 Markdown</td>
+        <td>"SQL 调优" Skill：references/ 下放公司数据库 schema、历史慢查询案例</td>
+      </tr>
+      <tr>
+        <td><strong>输出模板</strong></td>
+        <td>assets/ 下的 PPT / HTML / Frontend 模板</td>
+        <td>"周报" Skill：assets/ 下放标准周报模板</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout-good card">
+    <p><strong>关键洞察</strong>：Skill 的真正价值不是"让 Agent 更聪明"，而是<strong>把团队 / 个人的隐性知识变成显性资产</strong>。一个好的 Skill 写一次，能被几十个 Agent / 项目复用几个月 / 几年。</p>
+  </div>
+</section>
+
+<section>
+  <h2>5. 三者的协同工作流</h2>
+  <p>用一个真实例子（Cursor 编程 Agent）把三者串起来：</p>
+  <div class="mermaid-block">
+<pre class="mermaid">
+sequenceDiagram
+    participant U as 用户
+    participant A as Agent<br/>(Cursor Composer)
+    participant S as Skill<br/>(代码规范 + 团队约定)
+    participant L as LLM<br/>(推理内核)
+    participant C as 上下文窗口<br/>(200K Token)
+    participant T as 工具<br/>(Read/Edit/Bash)
+
+    U->>A: "把 login.py 改健壮点"
+    A->>S: 语义匹配触发
+    S->>C: 加载 SKILL.md<br/>(团队代码规范 + 审查清单)
+    A->>L: 把 Skill + 用户请求<br/>+ 仓库结构塞入上下文
+    L-->>A: 推理：要先读 login.py
+    A->>T: Read(login.py)
+    T-->>A: 返回文件内容（塞入上下文）
+    L-->>A: 推理：password 字段没 trim()
+    A->>T: Edit(login.py, 加上 trim())
+    T-->>A: 修改完成
+    A->>T: Bash(跑测试)
+    T-->>A: 测试通过
+    A->>U: 输出修改总结
+</pre>
+  </div>
+  <p>三个概念各自扮演的角色：</p>
+  <ul>
+    <li><strong>Skill</strong> 在第 3-4 步登场：把"团队代码规范"注入上下文，让 Agent 知道"健壮"对你意味着什么；</li>
+    <li><strong>上下文窗口</strong> 在每一步都被消耗：系统提示 + Skill + 历史 + 工具结果 都要装得下；</li>
+    <li><strong>Agent</strong> 是整个流程的<strong>调度者</strong>——它决定"现在该干什么"、"该调哪个工具"、"什么时候停"。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>6. 易混淆边界速查表</h2>
+  <table>
+    <thead>
+      <tr><th>对比维度</th><th>Agent</th><th>大模型的上下文</th><th>Skill</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>本质</strong></td>
+        <td>运行时（runtime）</td>
+        <td>物理容量（capacity）</td>
+        <td>指令包（instruction package）</td>
+      </tr>
+      <tr>
+        <td><strong>形态</strong></td>
+        <td>软件 / Agent SDK</td>
+        <td>数字（Token 数）</td>
+        <td>Markdown 文件（SKILL.md）</td>
+      </tr>
+      <tr>
+        <td><strong>谁来用</strong></td>
+        <td>开发者 / 用户</td>
+        <td>LLM 内部</td>
+        <td>Agent 内部</td>
+      </tr>
+      <tr>
+        <td><strong>类比</strong></td>
+        <td>员工本人</td>
+        <td>员工的工作记忆容量</td>
+        <td>员工的岗位手册</td>
+      </tr>
+      <tr>
+        <td><strong>边界</strong></td>
+        <td>Agent ≠ Workflow；Agent ≠ Copilot</td>
+        <td>窗口 ≠ Token 数；大 ≠ 信息全用得上</td>
+        <td>Skill ≠ Agent；Skill ≠ Command；Skill ≠ MCP</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>7. 实践建议</h2>
+  <ol>
+    <li><strong>做 Agent 之前</strong>，先想清楚<strong>上下文够不够</strong>——多轮 / 长任务的 Agent 必须配大窗口或 RAG；</li>
+    <li><strong>做 Skill 之前</strong>，先想清楚<strong>沉淀什么知识</strong>——一次性 prompt 不要做成 Skill，只有"会反复用的方法"才值得；</li>
+    <li><strong>三个一起用</strong>：让 Agent 跑、让上下文扛住、让 Skill 注入专业能力——三者缺一不可。</li>
+  </ol>
+</section>
+
+<footer>
+  由 concept-learner Skill 生成于 2026-09-04 · Mermaid 图由 <a href="https://mermaid.js.org/" target="_blank" rel="noopener">mermaid.js</a> 渲染 · 内容经过人工核查与修改（核对 Mermaid 语法、补充"上下文 3 层面影响"、增加实战流程图） · 反馈请开 issue。
+</footer>
+
+</div>
+</body>
+</html>

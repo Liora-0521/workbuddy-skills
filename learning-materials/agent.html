@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent · 学习指南</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --fg:#1f2328; --muted:#6b7280;
+    --accent:#2563eb; --accent-2:#7c3aed; --warn:#b45309;
+    --card:#ffffff; --border:#e5e7eb; --code:#f6f8fa;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;line-height:1.7;font-size:16px}
+  .wrap{max-width:880px;margin:0 auto;padding:48px 24px 80px}
+  header.hero{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
+  .eyebrow{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:13px;font-weight:600;letter-spacing:.04em}
+  h1{font-size:38px;line-height:1.2;margin:16px 0 8px}
+  .one-line{color:var(--muted);font-size:18px;margin:0}
+  section{margin:36px 0}
+  h2{font-size:24px;margin:0 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:18px;margin:24px 0 8px;color:var(--accent-2)}
+  ol,ul{padding-left:22px}
+  li{margin:6px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+  pre{background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto;border:1px solid var(--border)}
+  pre code{background:transparent;padding:0}
+  blockquote{border-left:4px solid var(--accent-2);background:#f5f3ff;margin:14px 0;padding:10px 16px;border-radius:0 8px 8px 0;color:#3b2a6e}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:12px 0}
+  .callout-warn{border-left:4px solid var(--warn);background:#fef3c7;color:#7c2d12}
+  details{margin:10px 0;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--card)}
+  details>summary{cursor:pointer;font-weight:600}
+  table{width:100%;border-collapse:collapse;margin:14px 0}
+  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:#f3f4f6}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .meta{color:var(--muted);font-size:14px;margin-top:8px}
+  footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  @media (max-width:600px){h1{font-size:28px}.wrap{padding:24px 16px 60px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">概念学习指南 · 01</span>
+  <h1>Agent</h1>
+  <p class="one-line"><strong>以 LLM 为大脑</strong>、能自主规划 + 调用工具 + 持续执行的 AI 系统。</p>
+  <p class="meta">由 concept-learner Skill 生成 · 人工核查与修改 · 2026-09-04</p>
+</header>
+
+<section>
+  <h2>1. 学习目标</h2>
+  <p>学完本文后，你应当能够：</p>
+  <ol>
+    <li>用一段话向同行解释 <strong>Agent</strong> 是什么、不是什么，并指出它和普通 LLM 的关键差异；</li>
+    <li>独立完成一个能调 1-2 个工具的简单 Agent（如天气查询 + 邮件发送）；</li>
+    <li>区分 <strong>Agent</strong> 与 LLM / Workflow / Copilot / Subagent 这 4 个常被混用的概念；</li>
+    <li>指出 Agent 的 1-2 个使用边界（比如"确定性任务反而是 Workflow 更划算"）；</li>
+    <li>读懂 OpenAI / Anthropic 官方关于 Agent 设计的核心段落。</li>
+  </ol>
+</section>
+
+<section>
+  <h2>2. 核心问题</h2>
+  <p>阅读时建议带着这些问题：</p>
+  <ul>
+    <li>Agent 解决的是什么问题？为什么纯 LLM 聊天不能解决？</li>
+    <li>它的 4 大模块（LLM / 规划 / 记忆 / 工具）里，缺哪一块它就只是"伪 Agent"？</li>
+    <li>它和最像它的概念 Workflow 区别在哪？什么场景该用 Workflow 而不是 Agent？</li>
+    <li>它的成本边界在哪？每多一轮循环，token 和延迟怎么涨？</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3. 个人理解</h2>
+
+  <h3>3.1 它是什么</h3>
+  <blockquote>Agent = LLM（推理内核）+ Planning（规划）+ Memory（记忆）+ Tools（工具调用）。它是把 LLM 从"会聊天"升级为"会办事"的关键架构。</blockquote>
+  <p><strong>我自己的理解</strong>：很多人第一反应会把 Agent 当成一个"更聪明的 AI"。其实关键不是"更聪明"，是<strong>有手有脚</strong>。一个 LLM 再强也只能输出文字；给它装上能跑命令、查数据库、写文件的工具，它才能真的改变环境状态。这也是为什么 OpenAI 在官方指南里把 Agent 定义为"独立代表用户完成任务（independently accomplish tasks on your behalf）"——重心在"完成任务"上，不是"生成回答"上。</p>
+  <p><strong>我当初的误解</strong>：以为 Agent 就是"能记住多轮对话的 LLM"。事实上"记忆"只是 Agent 的一部分，更核心的是"循环"——它不是输入一次输出一次，而是 <code>观察 → 推理 → 行动 → 观察 → ...</code> 的无限循环，直到任务完成或主动终止。</p>
+
+  <h3>3.2 核心机制 / 组成</h3>
+  <ul>
+    <li><strong>LLM（推理内核）</strong>：负责理解指令、做决策、选择工具。GPT-4 / Claude / Llama 都是"可塞进 Agent 的大脑"。</li>
+    <li><strong>Planning（规划模块）</strong>：把"订机票"这类大目标拆成"搜索 → 比价 → 选航班 → 填表 → 支付"的小步骤，常用技术是 Chain-of-Thought / Tree-of-Thought / ReAct。</li>
+    <li><strong>Memory（记忆系统）</strong>：短期记忆（当前会话上下文）+ 长期记忆（向量数据库 / 外部知识库），解决"窗口只有 N Token，装不下所有历史"的物理限制。</li>
+    <li><strong>Tools（工具集）</strong>：Agent 与外界交互的接口——搜索 API、读写文件、执行 shell、调用业务 API，每个工具都有标准化定义（name / description / parameters）。</li>
+    <li><strong>Controller / Loop（控制器）</strong>：管理"观察 → 规划 → 行动 → 反馈 → 状态更新"的循环调度，决定何时停止、何时回退、何时把控制权交回人类。</li>
+  </ul>
+  <p>工业实现上会简化成三件套：<strong>Model + Instructions + Tools</strong>（如 OpenAI Agents SDK），规划与记忆由 SDK 隐式提供。但概念上仍然是四大模块。</p>
+
+  <h3>3.3 为什么这样设计</h3>
+  <p>Agent 不是被某个人"天才设计"出来的，它是过去 5 年 LLM 三次能力突破倒逼出来的产物：</p>
+  <ol>
+    <li><strong>Function Calling 出现（2023）</strong>——LLM 第一次能稳定输出结构化指令，工具调用才变成可能；</li>
+    <li><strong>长上下文窗口（2024）</strong>——能装下整个对话历史，Agent 才不用每次都从零推理；</li>
+    <li><strong>强推理模型（o1/o3/Claude 3.7 thinking, 2025）</strong>——LLM 能可靠地"反思自己的错"，规划才能跑长链。</li>
+  </ol>
+  <p>没有这三点，任何一个 Agent 都会在第三步就崩掉。</p>
+</section>
+
+<section>
+  <h2>4. 应用案例</h2>
+  <div class="card">
+    <p><strong>案例：Cursor（AI 编程 IDE）里的 Composer 2 Agent</strong></p>
+    <p>Cursor 在 2026 年 3 月发布的 Composer 2 模型内置了 200K Token 的上下文窗口和工具调用能力，使 Agent 能在用户的代码仓库里：</p>
+    <ul>
+      <li>用 <code>ListFiles</code> 工具读仓库结构；</li>
+      <li>用 <code>Read</code> / <code>Grep</code> 工具定位相关代码；</li>
+      <li>用 <code>Edit</code> 工具修改源文件；</li>
+      <li>用 <code>Bash</code> 工具跑测试验证修改是否正确；</li>
+      <li>若测试失败，自动反思错误并重写代码。</li>
+    </ul>
+    <p>这背后是一个完整的 Agent 循环：<code>观察仓库 → 推理要改哪些文件 → 用工具读 → 编辑 → 测试 → 失败则反思 → 重做</code>。整个过程对用户只暴露一次"接受 / 拒绝"的最终决策点。</p>
+    <p>来源：<a href="https://cursor.com/blog" target="_blank" rel="noopener">Cursor 官方博客</a>、<a href="https://baike.baidu.com/item/%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AA%97%E5%8F%A3/67367067" target="_blank" rel="noopener">百度百科·上下文窗口</a>（提及 Composer 2 的 200K 窗口）。</p>
+  </div>
+</section>
+
+<section>
+  <h2>5. 概念辨析</h2>
+
+  <div class="callout-warn card">
+    <p><strong>边界 1：Agent ≠ 更"聪明"的 LLM</strong></p>
+    <p><em>误用方式</em>：以为换更先进的 LLM（比如 GPT-5 vs GPT-4）就能让 Agent 更强。事实上 Agent 的瓶颈往往在工具集的设计和循环的稳健性，而不是 LLM 的 IQ。换个 GPT-3.5 + 设计良好的工具集，常常比 GPT-5 + 烂工具集更好用。</p>
+    <p><em>如何判断</em>：如果你的"Agent"只是一次 prompt → 一次回答，没有工具调用、也没有循环，那它不是 Agent，只是一个普通的 LLM 调用。</p>
+  </div>
+
+  <div class="callout-warn card">
+    <p><strong>边界 2：Agent ≠ 永远比 Workflow 好</strong></p>
+    <p><em>误用方式</em>：把所有自动化任务都丢给 Agent，觉得"AI 更灵活"。对于<strong>确定性 + 高频 + 容错低</strong>的任务（订单状态查询、报表生成、对账），Workflow 反而更便宜、更稳定、更可审计。Anthropic 在《Building Effective Agents》里专门强调：能用 if-else 解决的就别上 Agent。</p>
+    <p><em>如何判断</em>：如果任务的成功率 > 95%、路径 < 5 步、错误成本高，用 Workflow；如果成功率 < 70%、路径可能很长、需要处理模糊输入，用 Agent。</p>
+  </div>
+
+  <div class="callout-warn card">
+    <p><strong>边界 3：Agent ≠ Subagent ≠ Copilot</strong></p>
+    <p><em>误用方式</em>：把"Subagent"当主 Agent 的替代品，或者把 Copilot 当 Agent 的低配版。其实是<strong>不同的设计模式</strong>：</p>
+    <ul>
+      <li><strong>Copilot</strong>：用户主导，AI 辅助（Cursor 早期模式、GitHub Copilot Chat）；</li>
+      <li><strong>Agent</strong>：AI 主导，用户审批（Cursor Composer 2、Devin）；</li>
+      <li><strong>Subagent</strong>：主 Agent 调度的、有独立上下文的子任务执行者（多 Agent 系统里的角色）。</li>
+    </ul>
+    <p><em>如何判断</em>：用户主动操作每一步 → Copilot；用户授权后 AI 跑全程 → Agent；多个 Agent 互相调用 → Multi-Agent（含 Subagent）。</p>
+  </div>
+</section>
+
+<section>
+  <h2>6. 自测问题</h2>
+
+  <details>
+    <summary>Q1（是什么）：用一句话定义 Agent。</summary>
+    <p><strong>答案</strong>：Agent 是以 LLM 为推理内核、结合规划 + 记忆 + 工具调用，能自主完成多步骤任务的 AI 系统。</p>
+  </details>
+
+  <details>
+    <summary>Q2（为什么）：Agent 相比单纯使用 LLM，最大的改进点是什么？</summary>
+    <p><strong>答案</strong>：能<strong>改变环境状态</strong>——通过工具调用真实地读写文件、调 API、操作浏览器，而不是只输出文本；并且能<strong>多步循环</strong>，在每一步观察反馈后调整下一步行动。</p>
+  </details>
+
+  <details>
+    <summary>Q3（怎么用）：给出一个具体场景，说明如何使用 Agent 解决。</summary>
+    <p><strong>答案</strong>（示例）：用户说"项目里有个登录页 bug，帮我修一下"。Agent 循环：(1) 用 <code>ListFiles</code> 列仓库；(2) 用 <code>Read</code> 读 <code>login.py</code>；(3) 用 <code>Grep</code> 找相关函数；(4) 推理出 bug 根因是 <code>password</code> 没 <code>trim()</code>；(5) 用 <code>Edit</code> 修改；(6) 用 <code>Bash</code> 跑测试；(7) 输出修复总结。</p>
+  </details>
+
+  <details>
+    <summary>Q4（怎么区分）：Agent 与 Workflow 的核心区别是什么？</summary>
+    <p><strong>答案</strong>：Workflow 是预设的确定性流程（if-else + 顺序），执行路径固定；Agent 是基于 LLM 推理的动态流程，能处理未定义分支。简单说：<strong>Workflow 是流程图，Agent 是会看情况走流程图的员工</strong>。</p>
+  </details>
+</section>
+
+<section>
+  <h2>7. 参考来源</h2>
+  <ol>
+    <li><a href="https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/" target="_blank" rel="noopener">A practical guide to building agents — OpenAI</a> · OpenAI 官方 Agent 工程实践指南 · 访问日期 2026-09-04</li>
+    <li><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank" rel="noopener">LLM Powered Autonomous Agents — Lilian Weng</a> · Agent 架构经典综述 · 访问日期 2026-09-04</li>
+    <li><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al., 2022)</a> · ReAct 框架原始论文 · 访问日期 2026-09-04</li>
+    <li><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents — Anthropic</a> · Anthropic 关于 Agent 工作流模式的总结 · 访问日期 2026-09-04</li>
+    <li><a href="https://baike.baidu.com/item/%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AA%97%E5%8F%A3/67367067" target="_blank" rel="noopener">上下文窗口 — 百度百科</a> · 提及 Cursor Composer 2 的 200K 上下文窗口 · 访问日期 2026-09-04</li>
+  </ol>
+</section>
+
+<footer>
+  由 concept-learner Skill 生成于 2026-09-04 · 内容经过人工核查与修改（补充个人理解、调整边界案例、核对所有链接） · 反馈请开 issue。
+</footer>
+
+</div>
+</body>
+</html>

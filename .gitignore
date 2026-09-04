@@ -13,22 +13,39 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Env
+# Env / secrets — NEVER commit these
 .env
 .env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+secrets/
+credentials/
 
 # Python
 __pycache__/
 *.pyc
+*.pyo
 .venv/
 venv/
-.env/
+env/
 
 # Node
 node_modules/
 npm-debug.log*
+yarn-debug.log*
 
-# Secrets — never commit credentials
-*.pem
-*.key
-secrets/
+# Build / cache
+dist/
+build/
+.cache/
+*.egg-info/
+
+# IDE / WorkBuddy local state
+.workbuddy/cache/
+.workbuddy/state/
+
+# Mermaid / temp
+*.tmp
+*.bak

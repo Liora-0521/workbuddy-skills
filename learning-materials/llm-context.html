@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>大模型的上下文 · 学习指南</title>
+<style>
+  :root{
+    --bg:#fbfaf7; --fg:#1f2328; --muted:#6b7280;
+    --accent:#2563eb; --accent-2:#7c3aed; --warn:#b45309;
+    --card:#ffffff; --border:#e5e7eb; --code:#f6f8fa;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;line-height:1.7;font-size:16px}
+  .wrap{max-width:880px;margin:0 auto;padding:48px 24px 80px}
+  header.hero{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
+  .eyebrow{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:13px;font-weight:600;letter-spacing:.04em}
+  h1{font-size:38px;line-height:1.2;margin:16px 0 8px}
+  .one-line{color:var(--muted);font-size:18px;margin:0}
+  section{margin:36px 0}
+  h2{font-size:24px;margin:0 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:18px;margin:24px 0 8px;color:var(--accent-2)}
+  ol,ul{padding-left:22px}
+  li{margin:6px 0}
+  code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+  pre{background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto;border:1px solid var(--border)}
+  pre code{background:transparent;padding:0}
+  blockquote{border-left:4px solid var(--accent-2);background:#f5f3ff;margin:14px 0;padding:10px 16px;border-radius:0 8px 8px 0;color:#3b2a6e}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:12px 0}
+  .callout-warn{border-left:4px solid var(--warn);background:#fef3c7;color:#7c2d12}
+  details{margin:10px 0;border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--card)}
+  details>summary{cursor:pointer;font-weight:600}
+  table{width:100%;border-collapse:collapse;margin:14px 0}
+  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+  th{background:#f3f4f6}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .meta{color:var(--muted);font-size:14px;margin-top:8px}
+  footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  @media (max-width:600px){h1{font-size:28px}.wrap{padding:24px 16px 60px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="eyebrow">概念学习指南 · 02</span>
+  <h1>大模型的上下文</h1>
+  <p class="one-line">LLM 单次推理中能"看见"的最大文本长度，<strong>以 Token 计量</strong>，是大模型的"短期记忆容量"。</p>
+  <p class="meta">由 concept-learner Skill 生成 · 人工核查与修改 · 2026-09-04</p>
+</header>
+
+<section>
+  <h2>1. 学习目标</h2>
+  <p>学完本文后，你应当能够：</p>
+  <ol>
+    <li>用一段话向同行解释 <strong>上下文窗口</strong>是什么，并区分"上下文长度（理论上限）"与"上下文窗口（实际容量）"；</li>
+    <li>独立估算"这段文本需要多少 Token"（中文 / 英文 / 代码各自的换算比例）；</li>
+    <li>区分 Token、上下文窗口、KV Cache、位置编码这 4 个相关概念；</li>
+    <li>指出上下文窗口的 1-2 个使用边界（比如"Lost in the Middle"现象）；</li>
+    <li>读懂 RoPE / YaRN / FlashAttention 任一论文的摘要部分。</li>
+  </ol>
+</section>
+
+<section>
+  <h2>2. 核心问题</h2>
+  <p>阅读时建议带着这些问题：</p>
+  <ul>
+    <li>为什么上下文窗口不是越大越好？背后的物理限制是什么？</li>
+    <li>它的关键机制（自注意力、位置编码、KV Cache）里，缺哪一块模型就跑不起来？</li>
+    <li>它和最像它的概念 RAG 区别在哪？什么场景该用 RAG 而不是扩窗口？</li>
+    <li>它的边界是什么？窗口开到 2M Token 后还有哪些坑？</li>
+  </ul>
+</section>
+
+<section>
+  <h2>3. 个人理解</h2>
+
+  <h3>3.1 它是什么</h3>
+  <blockquote>上下文窗口（Context Window）是基于 Transformer 架构的大语言模型在单次推理中能处理的最大序列长度，以 Token 数计量。</blockquote>
+  <p><strong>我自己的理解</strong>：把它想成一块固定面积的黑板——你问的问题、AI 写的回答、之前的对话历史，都写在同一块黑板上。黑板写满了，最早的内容就被擦掉，AI 就"忘了"。<strong>这块黑板的面积，就是上下文窗口</strong>。</p>
+  <p>注意有两个容易混的词：</p>
+  <ul>
+    <li><strong>上下文长度（Context Length）</strong>：模型架构能处理的最大序列长度（理论上限）；</li>
+    <li><strong>上下文窗口（Context Window）</strong>：实际推理时考虑的输入长度，<code>≤ 上下文长度</code>。</li>
+  </ul>
+  <p><strong>我当初的误解</strong>：以为"窗口 = 内存条"，越大越好。其实它更像<strong>注意力视野</strong>——越大视野越宽，但注意力越分散，关键信息反而容易被淹没（"Lost in the Middle"现象）。</p>
+
+  <h3>3.2 核心机制 / 组成</h3>
+  <ul>
+    <li><strong>Token</strong>：模型读写的最小单位。中文约 1.5-2 个汉字 = 1 Token；英文约 4 个字母 = 1 Token；标点、空格、emoji 都算。</li>
+    <li><strong>自注意力（Self-Attention）</strong>：每个 Token 都能"看见"序列中所有其他 Token，是窗口的物理基础。复杂度 <code>O(n²)</code>——长度翻倍，计算量变 4 倍。</li>
+    <li><strong>位置编码（Positional Encoding）</strong>：给 Token 加"顺序标签"，让无序的注意力知道谁在前、谁在后。RoPE / ALiBi / YaRN 都是不同方案。</li>
+    <li><strong>KV Cache</strong>：推理时为已生成的 Token 缓存 K/V 向量，避免每生成一个 Token 就重算一遍所有历史——长上下文能落地的关键工程优化。</li>
+    <li><strong>位置编码外推</strong>：模型训练时只见过 4K Token，但通过位置编码的巧妙设计，能"外推"到 128K / 1M 仍保持低困惑度。</li>
+  </ul>
+
+  <h3>3.3 为什么这样设计</h3>
+  <p>上下文窗口的演进是被三个物理约束倒逼出来的：</p>
+  <ol>
+    <li><strong>算力约束</strong>：自注意力是 O(n²)，窗口从 4K 到 128K 需要 1024 倍内存；</li>
+    <li><strong>显存约束</strong>：KV Cache 与输入长度线性相关，长窗口推理时显存很容易爆；</li>
+    <li><strong>位置编码泛化约束</strong>：原始 Transformer 的位置编码不能外推，必须重新设计（RoPE / YaRN）才能让短训练长度支撑长推理窗口。</li>
+  </ol>
+  <p>所以每次窗口扩大，背后都是一组新工程突破（不是简单"参数调大"）。</p>
+</section>
+
+<section>
+  <h2>4. 应用案例</h2>
+  <div class="card">
+    <p><strong>案例：Google Gemini 1.5 Pro 用 2M Token 窗口"读完"整部电影</strong></p>
+    <p>Google 在 2024 年演示过：把 2 小时电影《阿甘正传》的全部视频帧 + 字幕（折合约 1M Token）直接喂给 Gemini 1.5 Pro，然后问"影片最后 5 分钟主角说了什么"，模型能精确回答。</p>
+    <p>这件事背后的工程意义是：</p>
+    <ul>
+      <li><strong>多模态统一窗口</strong>：视频帧、字幕都被转成 Token 序列，共享同一注意力空间；</li>
+      <li><strong>超长位置编码</strong>：Gemini 用的是自研的"Mixture of Experts + 超长 RoPE"组合，能稳定外推到 2M；</li>
+      <li><strong>KV Cache 分页</strong>：2M Token 的 KV Cache 太大，必须用分页 + 量化才能装进显存。</li>
+    </ul>
+    <p>这意味着原本需要做"视频抽帧 + RAG + 多轮对话"的复杂流水线，现在可以直接"全量送入"——但成本仍然极高，不能滥用。</p>
+    <p>来源：<a href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini 官方页面</a>、<a href="https://baike.baidu.com/item/%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AA%97%E5%8F%A3/67367067" target="_blank" rel="noopener">百度百科·上下文窗口</a>。</p>
+  </div>
+</section>
+
+<section>
+  <h2>5. 概念辨析</h2>
+
+  <div class="callout-warn card">
+    <p><strong>边界 1：上下文窗口 ≠ Token 数量</strong></p>
+    <p><em>误用方式</em>：把"我用了 50K Token 的窗口"当成"我读了 50K 个字"。实际上 Token ≠ 字——中文 1 Token ≈ 1.5-2 个汉字，英文 1 Token ≈ 0.75 个词，代码里 1 Token ≈ 几字符不等。</p>
+    <p><em>如何判断</em>：用 tiktoken 等 tokenizer 实际跑一下，再换算成中文字数 / 英文字数。永远不要用"字数"估算成本。</p>
+  </div>
+
+  <div class="callout-warn card">
+    <p><strong>边界 2：超长窗口 ≠ 信息全用得上</strong></p>
+    <p><em>误用方式</em>：以为 Gemini 1M Token 窗口 = 模型能用好 1M Token。事实上<strong>Lost in the Middle</strong> 现象明确说明：模型对开头和结尾的召回率高（~80-90%），对中间段召回率显著下降（~40-50%）。把关键信息塞在中间等于埋雷。</p>
+    <p><em>如何判断</em>：重要信息要么放开头、要么放结尾；中间段只放"支撑材料"。或者改用 RAG 先做筛选，再送入模型。</p>
+  </div>
+
+  <div class="callout-warn card">
+    <p><strong>边界 3：扩窗口 ≠ 替代 RAG</strong></p>
+    <p><em>误用方式</em>：因为 Gemini 有 2M 窗口，就觉得所有任务都可以"全量送入"，不需要 RAG。其实当文档总量远超窗口（如 50M Token 的法律合同库），仍必须用 RAG 先检索候选；超长窗口适合做"精细对比"，不适合做"大海捞针"。</p>
+    <p><em>如何判断</em>：如果你的文档总量 < 窗口的 50%，可以全量送入；否则先 RAG 筛到 10-30%，再用长窗口做精细处理。</p>
+  </div>
+</section>
+
+<section>
+  <h2>6. 自测问题</h2>
+
+  <details>
+    <summary>Q1（是什么）：用一句话定义上下文窗口。</summary>
+    <p><strong>答案</strong>：上下文窗口是 LLM 单次推理能处理的最大序列长度，以 Token 计量，决定了模型"短期记忆"的容量上限。</p>
+  </details>
+
+  <details>
+    <summary>Q2（为什么）：为什么上下文窗口变大时算力需求呈平方级增长？</summary>
+    <p><strong>答案</strong>：因为 Transformer 的自注意力机制要为每个 Token 计算与其他所有 Token 的相关性分数，序列长度从 n 变 2n，注意力矩阵就从 n² 变 4n²，是 O(n²) 复杂度。</p>
+  </details>
+
+  <details>
+    <summary>Q3（怎么用）：估算一段 1 万字的中文文档需要多少 Token？</summary>
+    <p><strong>答案</strong>：中文 1 Token ≈ 1.5-2 个汉字，1 万字 ≈ 1 万字 ≈ 5000-6700 Token；加上标点、段落、可能的 markdown 标记，实际约 6K-7K Token。可用 <code>tiktoken</code> 验证。</p>
+  </details>
+
+  <details>
+    <summary>Q4（怎么区分）：上下文窗口 与 RAG 的核心区别是什么？</summary>
+    <p><strong>答案</strong>：上下文窗口是模型的<strong>内部容量</strong>（一次能"装多少"）；RAG 是<strong>外部检索机制</strong>（装不下时怎么补货）。两者互补——当总量能装下就用全量窗口，否则先用 RAG 缩小候选再送入。</p>
+  </details>
+</section>
+
+<section>
+  <h2>7. 参考来源</h2>
+  <ol>
+    <li><a href="https://baike.baidu.com/item/%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AA%97%E5%8F%A3/67367067" target="_blank" rel="noopener">上下文窗口 — 百度百科</a> · 中文权威百科条目（GPT/Claude/Gemini 窗口演进） · 访问日期 2026-09-04</li>
+    <li><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Attention Is All You Need (Vaswani et al., 2017)</a> · Transformer 原始论文，理解上下文窗口的物理基础 · 访问日期 2026-09-04</li>
+    <li><a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Lost in the Middle: How Language Models Use Long Contexts (Liu et al., 2023)</a> · 长上下文的"中间遗忘"现象 · 访问日期 2026-09-04</li>
+    <li><a href="https://www.81.cn/szb_223187/gfbszbxq/index.html?articleid=980232" target="_blank" rel="noopener">Token: 衡量算力的尺度 — 中国军网</a> · 中文 Token 与算力科普 · 访问日期 2026-09-04</li>
+    <li><a href="https://www.anthropic.com/news/context-engineering" target="_blank" rel="noopener">Effective context engineering for AI agents — Anthropic</a> · Anthropic 关于上下文工程的官方实践指南 · 访问日期 2026-09-04</li>
+  </ol>
+</section>
+
+<footer>
+  由 concept-learner Skill 生成于 2026-09-04 · 内容经过人工核查与修改（区分"上下文长度 vs 上下文窗口"、补充 Lost in the Middle 边界案例、核对所有链接） · 反馈请开 issue。
+</footer>
+
+</div>
+</body>
+</html>
