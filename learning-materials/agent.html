@@ -256,21 +256,29 @@ Observation:  3 failed, 12 passed  → 根据失败信息决定下一步</code><
 <section>
   <h2>8. 参考来源</h2>
   <ul class="refs">
-    <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents — Anthropic</a><br>
-      <span class="src">一手来源（官方工程博客）· 给出 Workflow 与 Agent 的架构区分、"先用最简单方案"原则、Agent 适用场景与三大设计原则 · 访问于 2026-09-10</span></li>
+    <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents — Anthropic（官方工程博客）</a><br>
+      <span class="src">官方 · 给出 Workflow 与 Agent 的架构区分、"先用最简单方案"原则、Agent 适用场景与三大设计原则 · 访问于 2026-09-10</span></li>
+    <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Effective context engineering for AI agents — Anthropic（官方工程博客）</a><br>
+      <span class="src">官方 · 给出被业界广泛采用的 Agent 定义："LLMs autonomously using tools in a loop"（大模型在循环中自主使用工具）· 访问于 2026-09-10</span></li>
     <li><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al., ICLR 2023)</a><br>
-      <span class="src">一手来源（论文原文，arXiv:2210.03629）· Thought → Action → Observation 循环的原始出处，含 HotpotQA / ALFWorld / WebShop 实验 · 访问于 2026-09-10</span></li>
-    <li><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank" rel="noopener">LLM Powered Autonomous Agents — Lilian Weng</a><br>
-      <span class="src">高引工程综述 · 把 Agent 拆为 Planning / Memory / Tool Use 三部分，适合建立整体框架 · 访问于 2026-09-10</span></li>
-    <li><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">Model Context Protocol — 官方站点</a><br>
-      <span class="src">一手来源（开放标准）· Agent 与外部工具/数据源连接的标准协议，Anthropic 在原文中作为工具集成的一种实现方式提及 · 访问于 2026-09-10</span></li>
+      <span class="src">论文原文（arXiv:2210.03629）· Thought → Action → Observation 循环的原始出处，含 HotpotQA / ALFWorld / WebShop 实验 · 访问于 2026-09-10</span></li>
+    <li><a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf" target="_blank" rel="noopener">A practical guide to building agents — OpenAI（官方 PDF）</a><br>
+      <span class="src">官方 · OpenAI 官方发布的 Agent 构建实践指南，把 Agent 定义为 instructions（做什么）+ guardrails（不做什么）+ tools（能做什么）· 访问于 2026-09-10</span></li>
+    <li><a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">OpenAI Agents SDK — 官方开发者文档</a><br>
+      <span class="src">官方 · "agent loop"、"handoffs（交接）"、"guardrails（护栏）"在工程层面的官方实现与术语定义 · 访问于 2026-09-10</span></li>
+    <li><a href="https://adk.dev/" target="_blank" rel="noopener">Agent Development Kit (ADK) — Google 官方文档</a><br>
+      <span class="src">官方 · Google 的多智能体开发框架文档，可作为"多 Agent 编排"这一类形态的官方工程参考 · 访问于 2026-09-10</span></li>
+    <li><a href="https://learn.microsoft.com/en-us/agent-framework/overview/" target="_blank" rel="noopener">Microsoft Agent Framework — 官方文档</a><br>
+      <span class="src">官方 · 微软官方 Agent 框架概览，给出对话式 Agent、工作流编排与工具调用的官方术语体系 · 访问于 2026-09-10</span></li>
+    <li><a href="https://modelcontextprotocol.io/specification/2026-07-28" target="_blank" rel="noopener">Model Context Protocol — 官方规范（2026-07-28）</a><br>
+      <span class="src">官方规范 · Agent 与外部工具/数据源连接的标准协议，定义 Hosts / Clients / Servers 三方角色与 Resources / Prompts / Tools 三类能力 · 访问于 2026-09-10</span></li>
   </ul>
-  <p class="meta">以上链接在生成时均已做 HTTP 可访问性验证（返回 200）。</p>
+  <p class="meta">以上 8 条全部为<strong>官方来源</strong>：厂商官方博客 / 官方文档 / 官方开源仓库 / 论文原文 / 开放标准规范。生成时已逐条做 HTTP 可访问性验证（见 README「来源核查记录」）。</p>
 </section>
 
 <footer>
   本文件由 <code>concept-learner</code> Skill 生成于 2026-09-10，随后经人工阅读、核查与修改。<br>
-  引用来源均为公开可访问页面；如发现链接失效或表述有误，欢迎提 issue 更正。
+  引用来源均为官方来源且公开可访问；如发现链接失效或表述有误，欢迎提 issue 更正。
 </footer>
 
 </div>

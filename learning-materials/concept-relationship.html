@@ -327,26 +327,28 @@ sequenceDiagram
 <section>
   <h2>8. 参考来源</h2>
   <ul class="refs">
-    <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents — Anthropic</a><br>
-      <span class="src">Agent 的架构定义、Workflow 与 Agent 的区分、适用场景与设计原则 · 访问于 2026-09-10</span></li>
-    <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Effective context engineering for AI agents — Anthropic</a><br>
-      <span class="src">"注意力预算"与"上下文腐烂"，以及 just-in-time 检索、压缩、子智能体等手段 · 访问于 2026-09-10</span></li>
+    <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents — Anthropic（官方工程博客）</a><br>
+      <span class="src">官方 · Agent 的架构定义、Workflow 与 Agent 的区分、适用场景与设计原则 · 访问于 2026-09-10</span></li>
+    <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Effective context engineering for AI agents — Anthropic（官方工程博客）</a><br>
+      <span class="src">官方 · "上下文是稀缺资源"这一判断的出处；"注意力预算"与"上下文腐烂"，以及 just-in-time 检索、压缩、子智能体等手段 · 访问于 2026-09-10</span></li>
+    <li><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al., ICLR 2023)</a><br>
+      <span class="src">论文原文 · Thought → Action → Observation 循环，是"Agent 在循环中运行、每轮都产生新上下文"的机制来源 · 访问于 2026-09-10</span></li>
     <li><a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Lost in the Middle: How Language Models Use Long Contexts (Liu et al., TACL 2023)</a><br>
-      <span class="src">U 型位置偏差的原始受控实验，支撑"上下文影响 Agent 取用质量"这一判断 · 访问于 2026-09-10</span></li>
-    <li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Equipping agents for the real world with Agent Skills — Anthropic</a><br>
-      <span class="src">Skill 的定义、渐进式披露三级结构、PDF Skill 案例 · 访问于 2026-09-10</span></li>
+      <span class="src">论文原文 · U 型位置偏差的原始受控实验，支撑"上下文影响 Agent 取用质量"这一判断 · 访问于 2026-09-10</span></li>
+    <li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Equipping agents for the real world with Agent Skills — Anthropic（官方工程博客）</a><br>
+      <span class="src">官方 · Skill 的定义、渐进式披露三级结构、PDF Skill 案例 · 访问于 2026-09-10</span></li>
     <li><a href="https://agentskills.io/home" target="_blank" rel="noopener">Agent Skills — 开放标准站点</a><br>
-      <span class="src">Skill 格式规范与 Discovery / Activation / Execution 三阶段机制 · 访问于 2026-09-10</span></li>
-    <li><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">Model Context Protocol — 官方站点</a><br>
-      <span class="src">MCP 作为连接协议的标准说明，用于对比 Skill 与 MCP 的分工 · 访问于 2026-09-10</span></li>
+      <span class="src">官方标准 · Skill 格式规范与 Discovery / Activation / Execution 三阶段机制 · 访问于 2026-09-10</span></li>
+    <li><a href="https://modelcontextprotocol.io/specification/2026-07-28" target="_blank" rel="noopener">Model Context Protocol — 官方规范（2026-07-28）</a><br>
+      <span class="src">官方规范 · MCP 作为连接协议的标准说明，用于对比 Skill 与 MCP 的分工 · 访问于 2026-09-10</span></li>
   </ul>
-  <p class="meta">以上链接在生成时均已做 HTTP 可访问性验证（返回 200）。</p>
+  <p class="meta">以上 7 条全部为<strong>官方来源</strong>：厂商官方博客 / 官方文档 / 论文原文 / 开放标准规范。生成时已逐条做 HTTP 可访问性验证（见 README「来源核查记录」）。</p>
 </section>
 
 <footer>
   本文件由 <code>concept-learner</code> Skill 生成于 2026-09-10，随后经人工阅读、核查与修改。<br>
   本章 Mermaid 关系图使用仓库内 <code>vendor/mermaid.min.js</code> 本地渲染，不依赖外部 CDN。<br>
-  引用来源均为公开可访问页面；如发现链接失效或表述有误，欢迎提 issue 更正。
+  引用来源均为官方来源且公开可访问；如发现链接失效或表述有误，欢迎提 issue 更正。
 </footer>
 
 </div>

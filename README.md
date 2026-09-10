@@ -53,8 +53,8 @@ workbuddy-skills/
 | 二、输入信息 | `concept`（必填）+ `audience` / `focus` / `output_dir` / `slug`（可选） |
 | 三、生成步骤 | Step 1–10，从划定范围到自检，每步不可跳过 |
 | 四、输出结构 | 8 个章节的顺序与内容要求 |
-| 五、资料来源要求 | 必须真实、可核查、优先一手来源、标注访问日期 |
-| 六、自检要求 | 13 项强制清单，未通过不得交付 |
+| 五、资料来源要求 | **只引用官方来源**（官方文档 / 官方博客 / 官方仓库 / 标准规范 / 论文原文），逐条验证可访问性，标注访问日期，条数不限 |
+| 六、自检要求 | 14 项强制清单，未通过不得交付 |
 
 ---
 
@@ -102,7 +102,56 @@ workbuddy-skills/
 5. 应用案例（真实可验证）
 6. 概念辨析（≥3 条边界与误用）
 7. **自测题（3–5 道，难度递进 ★ → ★★★★★，答案折叠）**
-8. 参考来源（逐条 HTTP 验证 + 访问日期）
+8. 参考来源（**全部为官方来源**，逐条 HTTP 验证 + 访问日期）
+
+### 参考来源总览（去重后 18 条，全部为官方来源）
+
+**厂商官方博客 / 官方文档（10 条）**
+
+| 来源 | 类型 | 用于 |
+| --- | --- | --- |
+| [Building effective agents — Anthropic Engineering](https://www.anthropic.com/engineering/building-effective-agents) | 官方工程博客 | Agent、关系图谱 |
+| [Effective context engineering for AI agents — Anthropic Engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) | 官方工程博客 | 上下文、Agent、关系图谱 |
+| [Equipping agents for the real world with Agent Skills — Anthropic Engineering](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) | 官方工程博客 | Skill、关系图谱 |
+| [Prompt caching with Claude — Anthropic](https://claude.com/blog/prompt-caching) | 官方博客 | 上下文 |
+| [A practical guide to building agents — OpenAI（PDF）](https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf) | 官方指南 | Agent |
+| [OpenAI Agents SDK — 官方文档](https://openai.github.io/openai-agents-python/) | 官方文档 | Agent |
+| [Agent Development Kit (ADK) — Google 官方文档](https://adk.dev/) | 官方文档 | Agent |
+| [Microsoft Agent Framework — 官方文档](https://learn.microsoft.com/en-us/agent-framework/overview/) | 官方文档 | Agent |
+| [Claude Code — Skills 官方文档](https://code.claude.com/docs/en/skills) | 官方文档 | Skill |
+| [上下文硬盘缓存 — DeepSeek 官方 API 文档](https://api-docs.deepseek.com/guides/kv_cache) | 官方文档 | 上下文 |
+
+**官方开源仓库（1 条）**
+
+| 来源 | 类型 | 用于 |
+| --- | --- | --- |
+| [anthropics/skills](https://github.com/anthropics/skills) | 官方开源仓库 | Skill |
+
+**开放标准 / 规范（3 条）**
+
+| 来源 | 类型 | 用于 |
+| --- | --- | --- |
+| [Model Context Protocol — 官方规范（2026-07-28）](https://modelcontextprotocol.io/specification/2026-07-28) | 官方规范 | Agent、关系图谱 |
+| [Agent Skills 格式规范](https://agentskills.io/specification) | 开放标准 | Skill |
+| [Agent Skills 开放标准站点](https://agentskills.io/home) | 开放标准 | Skill、关系图谱 |
+
+**论文原文（4 条）**
+
+| 来源 | 类型 | 用于 |
+| --- | --- | --- |
+| [ReAct: Synergizing Reasoning and Acting in Language Models（arXiv:2210.03629）](https://arxiv.org/abs/2210.03629) | 论文原文 | Agent、关系图谱 |
+| [Lost in the Middle: How Language Models Use Long Contexts（arXiv:2307.03172）](https://arxiv.org/abs/2307.03172) | 论文原文 | 上下文、关系图谱 |
+| [Attention Is All You Need（arXiv:1706.03762）](https://arxiv.org/abs/1706.03762) | 论文原文 | 上下文 |
+| [RoFormer: Enhanced Transformer with Rotary Position Embedding（arXiv:2104.09864）](https://arxiv.org/abs/2104.09864) | 论文原文 | 上下文 |
+
+**来源准入门槛**——只接受四类：
+
+1. **厂商官方文档 / 官方博客**：域名与发布主体必须是该概念的所有者或维护者；
+2. **官方开源仓库**：组织账号下的一手代码与示例；
+3. **开放标准 / 规范**：标准制定方发布的正式文本；
+4. **论文原文**：作者发布或正式出版物页面。
+
+个人博客、公众号、知乎 / CSDN / 掘金等二手转述，教程站、聚合站、AI 内容农场，一律不进入引用列表。**条数不设上限**：官方来源足够时不必压缩，涉及多个厂商时优先覆盖多家，让同一结论有两条以上官方原文互相印证。
 
 ---
 
@@ -121,8 +170,8 @@ workbuddy-skills/
 
 | 核查项 | 具体做法 |
 | --- | --- |
-| **链接真实性** | 逐条检查所有引用 URL 的可访问性。本轮共验证 15 条候选链接，其中 14 条返回 200；**MIT Press 上的 Lost in the Middle 页面返回 403**（反爬拦截），因此改用 arXiv 主链接，避免收录无法确认内容的地址 |
-| **来源质量** | 确认每条引用都是**一手来源**——论文用 arXiv 原文，产品机制用官方工程博客与官方文档，不用二手转述和营销号内容 |
+| **来源全部收敛为官方** | 按"只引用官方来源"重新审了一遍全部引用：删除唯一一条非官方来源——Lilian Weng 的 LLM Agent 综述（虽属高引工程综述，但发布主体是个人博客而非机构），替换为 OpenAI 官方 PDF 指南，并补充 OpenAI Agents SDK、Google ADK、Microsoft Agent Framework 三家官方文档，使来源覆盖 4 家厂商 / 机构，便于交叉印证 |
+| **链接真实性 + 最终跳转地址检查** | 逐条做 HTTP 验证，并**额外检查最终跳转地址**。过程中查出几条"看着是官方、实际打不开"的链接：`docs.claude.com` / `platform.claude.com` 在本网络环境会被重定向到「区域不可用」占位页，`platform.openai.com` 与 `openai.com` 返回 403，`ai.google.dev` 不可达。这些一律**不纳入引用**，改用可访问的等价官方入口（`claude.com/blog`、`cdn.openai.com`、`adk.dev` 等）。最终收录 18 条，全部为官方来源且实测可打开 |
 | **表述与原文一致** | 对照原文逐条核对关键结论的措辞。例如 Anthropic 对 Agent 的定义是"LLM 在循环中自主使用工具"，Workflow 与 Agent 的区分标准是"控制流是否由预定义代码路径决定"——这些表述都回到原文确认过 |
 | **技术结论复核** | 例如"自注意力复杂度为 O(n²)"这一条，确认原始论文中的表述是 O(n²·d)，并在正文加脚注说明现代实现（FlashAttention、稀疏注意力、KV 压缩）已大幅降低常数与显存开销——避免读者理解成"长度一翻倍就必然慢四倍" |
 | **时效性限定** | Lost in the Middle 的实验数据来自 2023 年的模型，正文明确标注"后续模型代际有所缓解但未消除，幅度依赖具体模型，应当自行实测"，不把这组数字当成永恒常量 |
