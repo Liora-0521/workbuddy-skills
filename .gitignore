@@ -1,51 +1,94 @@
+# ============================================================
 # OS / editor cruft
+# ============================================================
 .DS_Store
 Thumbs.db
+desktop.ini
 *.swp
 *.swo
 *~
 .vscode/
 .idea/
+*.code-workspace
 
-# Logs
+# ============================================================
+# Logs / temp
+# ============================================================
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.tmp
+*.bak
+*.orig
+*.rej
 
-# Env / secrets — NEVER commit these
+# ============================================================
+# 敏感信息 —— 绝对不要提交
+# ============================================================
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 *.pem
 *.key
+*.p12
+*.pfx
+*.jks
+*.keystore
 *.crt
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+.ssh/
 secrets/
+secret/
 credentials/
+credentials.json
+service-account*.json
+*token*.txt
+*password*.txt
 
+# ============================================================
 # Python
+# ============================================================
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 .venv/
 venv/
 env/
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
+# ============================================================
 # Node
+# ============================================================
 node_modules/
-npm-debug.log*
-yarn-debug.log*
+.npm/
+.pnpm-store/
+coverage/
 
+# ============================================================
 # Build / cache
+# ============================================================
 dist/
 build/
 .cache/
-*.egg-info/
+.parcel-cache/
+*.tsbuildinfo
 
-# IDE / WorkBuddy local state
+# ============================================================
+# WorkBuddy 本地状态
+# 注意：.workbuddy/skills/ 是本仓库的交付内容，必须提交，
+#      因此这里只排除运行时状态与缓存，不排除 skills/。
+# ============================================================
 .workbuddy/cache/
 .workbuddy/state/
-
-# Mermaid / temp
-*.tmp
-*.bak
+.workbuddy/logs/
+.workbuddy/*.local.json
+.workbuddy/.DS_Store

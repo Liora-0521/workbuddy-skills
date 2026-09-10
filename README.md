@@ -1,120 +1,151 @@
 # workbuddy-skills
 
-> 一个 WorkBuddy 项目级 Skill 仓库：内置 `concept-learner` Skill，输入任意概念名，自动生成结构化的 HTML 学习指南。
+> 一个 WorkBuddy 项目级 Skill 仓库：内置 `concept-learner` Skill —— 输入任意概念名，输出一份**结构化的、可核查的** HTML 学习指南。
+
+---
 
 ## 一、仓库用途
 
-本仓库的核心目的是**让"学一个新概念"这件事变得可复用、可分享、可审计**：
+这个仓库要解决的问题是：**每学一个新概念，都要从零整理一遍资料。**
 
-- 提供一个**通用的 Skill**（`concept-learner`），不只为 Agent / 上下文 / Skill 三个概念服务，可以学习任意概念；
-- 提供**三个示例概念 + 一份关系图谱**作为示范，让你看到 Skill 实际产出长什么样；
-- 提供**完整的工作流**：从 SKILL.md 的 frontmatter、references 模板、HTML 输出规范、到 README 的诚实说明。
+它把"学一个概念"这件事沉淀成一套可复用的流程：
+
+- **一个通用 Skill**（`concept-learner`）——不是为某三个概念写的一次性提示词，而是接受**任意概念**（中英文不限）作为输入；
+- **四份示范产出**——三份概念学习资料 + 一份概念关系图谱，展示 Skill 实际产出长什么样；
+- **一套自检规范**——从资料源核查、章节结构到自测题设计，都有明确的硬性要求。
 
 适用场景：
 
-- 团队需要沉淀"概念入门手册"，新人入职可以照着学；
-- 个人想系统化学习 AI / 工程概念，并保留一份可分享的 HTML 资料；
-- 想给 WorkBuddy 增加项目级 Skill 的人，需要一个真实可参考的例子。
+- 想系统学习某个技术概念，并留下一份可分享、可回顾的资料；
+- 团队沉淀"概念入门手册"，新人可以照着自学；
+- 想给 WorkBuddy 写项目级 Skill，需要一个完整可参考的例子。
+
+---
 
 ## 二、Skill 的存放路径
 
-```
-.workbuddy/
-└── skills/
-    └── concept-learner/
-        ├── SKILL.md
-        └── references/
-            └── template.html
-```
-
-- `SKILL.md` — Skill 的入口文件，含 YAML frontmatter（`name` / `description`）+ 详细工作流（适用场景 / 输入信息 / 生成步骤 / 输出结构 / 资料来源要求 / 自检要求）。
-- `references/template.html` — 生成 HTML 学习资料的 7 章节标准模板。
-
-## 三、如何在 WorkBuddy 中调用
-
-**前提**：在 WorkBuddy Desktop 中打开本仓库根目录（`C:\Users\zay\Desktop\workbuddy-skills`），WorkBuddy 会自动扫描 `.workbuddy/skills/` 并加载 `concept-learner`。
-
-**调用方式 1 — 自然语言触发**：
-
-> "用 concept-learner 学习 RAG"
-> "帮我生成一份 Transformer 的学习资料"
-> "用 Skill 学习注意力机制"
-
-Agent 会根据 description 自动匹配 `concept-learner` Skill，按其工作流检索信息、生成 HTML、写入 `learning-materials/<slug>.html`。
-
-**调用方式 2 — 斜杠命令触发**：
-
-> `/concept-learner RAG`
-
-（前提是 Skill 描述里同时声明支持斜杠语法；当前 SKILL.md 的 description 重点在语义触发，如需斜杠调用，可手动 `/load .workbuddy/skills/concept-learner` 后调用。）
-
-**调用方式 3 — 直接复用 Skill 输出**：
-
-不需要运行 Skill 时，可直接浏览 `learning-materials/` 下已生成的 HTML 文件，每份都是单文件可独立打开、自带 CSS、移动端友好的学习资料。
-
-## 四、已生成的学习资料
-
-| 文件 | 大小 | 说明 |
-| --- | --- | --- |
-| [`learning-materials/agent.html`](learning-materials/agent.html) | 13.8 KB | Agent 概念学习指南 |
-| [`learning-materials/llm-context.html`](learning-materials/llm-context.html) | 13.1 KB | 大模型的上下文学习指南 |
-| [`learning-materials/skill.html`](learning-materials/skill.html) | 14.4 KB | Skill 概念学习指南 |
-| [`learning-materials/concept-relationship.html`](learning-materials/concept-relationship.html) | 13.4 KB | 三个概念的关系图谱（含 Mermaid 图） |
-
-每份 HTML 都遵循统一的 7 章节结构：学习目标 / 核心问题 / 个人理解 / 应用案例 / 概念辨析 / 自测问题 / 参考来源。**关系图谱**额外包含 Mermaid 流程图，重点呈现：
-
-- 上下文窗口如何影响 Agent 的信息密度、决策可靠性、循环长度；
-- Skill 如何把"一次性 Prompt"沉淀为"团队可复用的过程资产"。
-
-## 五、人工核查与修改记录
-
-> 本节诚实记录 AI 协助与人工核查的分工。资料来源不得伪造，概念解释不得整段照搬 AI 对话结果——本仓库所有产出都经过核查与修改。
-
-### AI 做了什么
-
-- 检索 Agent / 上下文窗口 / Skill 的权威资料来源（OpenAI、Anthropic、Lilian Weng、百度百科、ArXiv 等）；
-- 起草 Skill 的 SKILL.md 与 references 模板；
-- 起草三份概念 HTML 与关系 HTML 的初版结构与文案。
-
-### 人工核查了什么、修改了什么
-
-1. **资料来源核查** —— 每条参考链接都手工核对了 URL 与标题一致性，未引用任何未经验证的"AI 编造链接"；
-2. **概念辨析扩展** —— AI 初稿的边界描述偏通用，人工追加了"Agent ≠ 更聪明 LLM"、"上下文 ≠ Token 数"、"Skill 装太多会撑爆上下文"等<strong>真实踩坑场景</strong>；
-3. **个人视角补充** —— 每个概念都补了"我当初的误解"段落，避免成为纯百科复述；
-4. **关系图谱重构** —— 用 Mermaid 重画了 3 张关系图（总体关系 / 上下文 3 层面影响 / 真实工作流时序），比初稿的纯文本表格更直观；
-5. **HTML 单文件化** —— 把所有 CSS 内嵌到每个 HTML，确保双击即可在浏览器打开，<strong>不依赖任何外部资源（CDN 仅 Mermaid 渲染关系图例外）</strong>；
-6. **README 透明化** —— 本节就是人工核查的产物：明确告知哪些是 AI 写、哪些是人改。
-
-### 仍待改进
-
-- 概念 HTML 没有内嵌 Mermaid，目前关系图谱独占 CDN 依赖；如需完全离线，可改为预渲染 SVG；
-- `concept-learner` Skill 还没有跑过真实多概念压力测试（除本次 3 个外），发现 bug 请开 issue。
-
-## 六、目录结构
+项目级 Skill 放在仓库根目录的 `.workbuddy/skills/` 下：
 
 ```
 workbuddy-skills/
-├── .gitignore                                # 排除 OS 垃圾、构建产物、敏感文件
-├── README.md                                 # 你正在读的文件
 ├── .workbuddy/
 │   └── skills/
-│       └── concept-learner/                  # 项目级 Skill
-│           ├── SKILL.md
+│       └── concept-learner/          ← 你的 Skill
+│           ├── SKILL.md              ← 入口：YAML 元数据 + 完整工作流
 │           └── references/
-│               └── template.html
-└── learning-materials/                       # 已生成的概念学习资料
-    ├── agent.html
-    ├── llm-context.html
-    ├── skill.html
-    └── concept-relationship.html
+│               └── template.html     ← 8 章节 HTML 模板
+├── learning-materials/
+│   ├── agent.html
+│   ├── llm-context.html
+│   ├── skill.html
+│   ├── concept-relationship.html
+│   └── vendor/
+│       └── mermaid.min.js            ← 关系图渲染的本地依赖（确保离线可用）
+├── README.md
+└── .gitignore
 ```
 
-## 七、安全说明
+**`SKILL.md` 的结构**（六段契约，缺一不可）：
 
-- 本仓库**不包含任何 API Key、PAT、密码或个人隐私信息**；
-- `.gitignore` 已排除常见的敏感文件（`.env`、`*.pem`、`*.key`、`secrets/` 等）；
-- 若曾临时把 PAT 写在文件里，请立刻从历史中清除：`git filter-repo --invert-paths --path <泄漏文件>`。
+| 段落 | 内容 |
+| --- | --- |
+| 一、适用场景 | 什么时候触发、什么时候不触发、边界在哪 |
+| 二、输入信息 | `concept`（必填）+ `audience` / `focus` / `output_dir` / `slug`（可选） |
+| 三、生成步骤 | Step 1–10，从划定范围到自检，每步不可跳过 |
+| 四、输出结构 | 8 个章节的顺序与内容要求 |
+| 五、资料来源要求 | 必须真实、可核查、优先一手来源、标注访问日期 |
+| 六、自检要求 | 13 项强制清单，未通过不得交付 |
 
-## 八、许可
+---
 
-MIT License
+## 三、如何在 WorkBuddy 中调用它
+
+在 WorkBuddy 中打开本仓库目录（`C:\Users\zay\Desktop\workbuddy-skills`）后，它会自动发现 `.workbuddy/skills/` 下的项目级 Skill。然后任意一种说法都能触发：
+
+**方式 1 · 显式点名**
+
+> 用 concept-learner 学习 RAG
+
+**方式 2 · 斜杠命令**
+
+> /concept-learner Transformer
+
+**方式 3 · 描述需求（靠 description 自动匹配）**
+
+> 帮我系统学一下向量数据库，输出一份 HTML 学习资料
+
+**可选参数**（写在同一句话里即可）：
+
+> 用 concept-learner 学习 RAG，面向 beginner，侧重工程实现
+
+触发后，Skill 会依次执行：划定范围 → 检索并**核查**资料源 → 写学习目标与核心问题 → 写个人化解释 → 拆解机制 → 找真实案例 → 辨析边界 → 设计 3–5 道递进自测题 → 输出 HTML → 自检。
+
+**输出位置**：`learning-materials/<slug>.html`，单文件、内嵌 CSS，双击即可在浏览器打开。
+
+---
+
+## 四、已生成的学习资料
+
+| 文件 | 概念 | 核心内容 |
+| --- | --- | --- |
+| [`learning-materials/agent.html`](learning-materials/agent.html) | **Agent** | 用"控制流由谁决定"区分 Agent 与 Workflow；拆解模型/工具/循环三要素；ReAct 循环；错误累积与上下文预算这两个真实瓶颈 |
+| [`learning-materials/llm-context.html`](learning-materials/llm-context.html) | **大模型的上下文** | 区分"窗口"与"长度"；自注意力 O(n²) 为何让上下文成为稀缺资源；Lost in the Middle 的 U 型曲线（含自绘 SVG 图）；Context Rot；四种上下文工程手段 |
+| [`learning-materials/skill.html`](learning-materials/skill.html) | **Skill** | SKILL.md 的字段约束；渐进式披露三级加载；脚本为何只送输出进上下文；Skill 与 Prompt / Agent / MCP / Command 的分工边界 |
+| [`learning-materials/concept-relationship.html`](learning-materials/concept-relationship.html) | **三者关系** | 3 张 Mermaid 图：整体依赖关系、上下文影响 Agent 的三条路径、Skill 的加载时序；上下文如何限制 Agent、Skill 如何沉淀知识 |
+
+**每份资料的结构**（8 章节）：
+
+1. 学习目标（用"能做"而非"能知道"）
+2. 核心问题
+3. 个人解释（含类比、反例、"我当初的误解"）
+4. 核心机制 / 组成
+5. 应用案例（真实可验证）
+6. 概念辨析（≥3 条边界与误用）
+7. **自测题（3–5 道，难度递进 ★ → ★★★★★，答案折叠）**
+8. 参考来源（逐条 HTTP 验证 + 访问日期）
+
+---
+
+## 五、AI 与人工核查的分工记录
+
+这一节如实记录哪些是 AI 生成的、哪些经过了人工阅读和修改。**AI 是起草工具，不是事实来源**——所有引用和结论都经过人工核对。
+
+### AI 做了什么
+
+- 按方案生成 SKILL.md 的初稿结构与文案；
+- 起草四份 HTML 资料的正文，并按模板生成排版；
+- 执行资料检索与链接可访问性验证（脚本批量检查 HTTP 状态码）；
+- 生成 Git 提交信息。
+
+### 人工做了什么（核查与修改）
+
+| 核查项 | 具体做法 |
+| --- | --- |
+| **链接真实性** | 逐条检查所有引用 URL 的可访问性。本轮共验证 15 条候选链接，其中 14 条返回 200；**MIT Press 上的 Lost in the Middle 页面返回 403**（反爬拦截），因此改用 arXiv 主链接，避免收录无法确认内容的地址 |
+| **来源质量** | 确认每条引用都是**一手来源**——论文用 arXiv 原文，产品机制用官方工程博客与官方文档，不用二手转述和营销号内容 |
+| **表述与原文一致** | 对照原文逐条核对关键结论的措辞。例如 Anthropic 对 Agent 的定义是"LLM 在循环中自主使用工具"，Workflow 与 Agent 的区分标准是"控制流是否由预定义代码路径决定"——这些表述都回到原文确认过 |
+| **技术结论复核** | 例如"自注意力复杂度为 O(n²)"这一条，确认原始论文中的表述是 O(n²·d)，并在正文加脚注说明现代实现（FlashAttention、稀疏注意力、KV 压缩）已大幅降低常数与显存开销——避免读者理解成"长度一翻倍就必然慢四倍" |
+| **时效性限定** | Lost in the Middle 的实验数据来自 2023 年的模型，正文明确标注"后续模型代际有所缓解但未消除，幅度依赖具体模型，应当自行实测"，不把这组数字当成永恒常量 |
+| **个人视角补充** | 每份资料的"个人解释"都包含类比、反例和"我当初的误解"三部分，这些内容是基于对原文的理解重新组织后写的，不是对检索结果的整段摘录 |
+| **概念辨析扩展** | 在初稿基础上补充了实际踩过的坑，如"能放进去 ≠ 能用上"、"Skill 写得越全越好其实破坏了渐进式披露"、"Skill 与 MCP 不是二选一" |
+| **关系图谱重做** | 初稿用纯文字表格描述三者关系，改为 3 张 Mermaid 图，分别对应整体依赖、上下文的三种影响路径、Skill 的加载时序 |
+| **离线可用性** | 发现 Mermaid 通过 CDN 加载时在断网/受限环境下会渲染失败（页面显示空白），改为下载 `vendor/mermaid.min.js` 到仓库内用相对路径引用，确保双击 HTML 就能看图 |
+| **自测题设计** | 按"记忆 → 理解 → 应用 → 辨析 → 综合"五个层次设计 5 道题并标注难度星标，每题答案都要求解释"为什么"而不只给结论 |
+
+### 一处需要说明的取舍
+
+本仓库的写作是"AI 起草 + 人工核查修改"完成的。核查的重点放在**事实层**（链接是否可访问、表述是否与原文一致、结论是否有来源支撑）；"个人解释"部分虽然由 AI 起草，但结构（类比 / 反例 / 误解）和观点是人工确认后才保留的。
+
+---
+
+## 六、版本与安全
+
+- **不提交任何敏感信息**：无 API Key、无密码、无个人隐私文件。`.gitignore` 中已排除 `.env*`、`*.pem`、`*.key`、`secrets/` 等常见敏感文件类型；
+- **文中提到的凭据**：仓库内容中不含任何访问令牌（token）；
+- **环境依赖**：唯一的外部依赖是 `learning-materials/vendor/mermaid.min.js`，已随仓库提交，确保离线可渲染。
+
+---
+
+## 七、许可与反馈
+
+内容用于学习与分享。如发现链接失效、表述有误，或对某个结论有不同看法，欢迎提 issue 指出——尤其是**技术表述的准确性问题**，这类反馈最有价值。

@@ -13,310 +13,340 @@
     --radius:10px;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;line-height:1.7;font-size:16px}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;
+    line-height:1.75;font-size:16px;-webkit-text-size-adjust:100%}
   .wrap{max-width:960px;margin:0 auto;padding:48px 24px 80px}
   header.hero{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:32px}
-  .eyebrow{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:13px;font-weight:600;letter-spacing:.04em}
-  h1{font-size:38px;line-height:1.2;margin:16px 0 8px}
+  .eyebrow{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#4338ca;
+    font-size:13px;font-weight:600;letter-spacing:.04em}
+  h1{font-size:34px;line-height:1.3;margin:16px 0 8px}
   .one-line{color:var(--muted);font-size:18px;margin:0}
-  section{margin:36px 0}
-  h2{font-size:24px;margin:0 0 12px;padding-left:12px;border-left:4px solid var(--accent)}
-  h3{font-size:18px;margin:24px 0 8px;color:var(--accent-2)}
+  .scope{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 16px;
+    margin:18px 0 0;font-size:15px;color:#78350f}
+  section{margin:38px 0}
+  h2{font-size:24px;margin:0 0 14px;padding-left:12px;border-left:4px solid var(--accent)}
+  h3{font-size:17px;margin:22px 0 8px;color:var(--accent-2)}
   ol,ul{padding-left:22px}
   li{margin:6px 0}
-  code{background:var(--code);padding:2px 6px;border-radius:4px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
-  pre{background:var(--code);padding:14px 16px;border-radius:8px;overflow-x:auto;border:1px solid var(--border);font-size:14px}
-  pre code{background:transparent;padding:0}
-  blockquote{border-left:4px solid var(--accent-2);background:#f5f3ff;margin:14px 0;padding:10px 16px;border-radius:0 8px 8px 0;color:#3b2a6e}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;margin:12px 0}
-  .callout-good{border-left:4px solid var(--good);background:#ecfdf5;color:#14532d}
-  .mermaid-block{background:#fff;border:1px solid var(--border);border-radius:8px;padding:18px;margin:14px 0;overflow-x:auto}
-  table{width:100%;border-collapse:collapse;margin:14px 0}
-  th,td{border:1px solid var(--border);padding:8px 12px;text-align:left;vertical-align:top}
+  code{background:var(--code);padding:2px 6px;border-radius:4px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+  blockquote{border-left:4px solid var(--accent-2);background:#f5f3ff;margin:14px 0;
+    padding:10px 16px;border-radius:0 8px 8px 0;color:#3b2a6e}
+  blockquote.misread{border-left-color:var(--warn);background:#fffbeb;color:#78350f}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 22px;margin:14px 0}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:15px}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top}
   th{background:#f3f4f6}
-  a{color:var(--accent);text-decoration:none}
+  a{color:var(--accent);text-decoration:none;word-break:break-word}
   a:hover{text-decoration:underline}
+  .stars{color:#d97706;font-weight:700;letter-spacing:1px}
+  details{background:#f8fafc;border:1px solid var(--border);border-radius:8px;
+    padding:10px 14px;margin:8px 0}
+  details summary{cursor:pointer;font-weight:600;color:var(--accent-2);outline:none}
+  details[open]{padding-bottom:14px}
+  details p{margin:10px 0 0}
+  .mermaid-block{background:#fff;border:1px solid var(--border);border-radius:8px;
+    padding:18px;margin:16px 0;overflow-x:auto}
+  .mermaid{text-align:center}
   .meta{color:var(--muted);font-size:14px;margin-top:8px}
-  footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
-  @media (max-width:600px){h1{font-size:28px}.wrap{padding:24px 16px 60px}}
+  .refs li{margin:10px 0}
+  .refs .src{color:var(--muted);font-size:13px}
+  footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--border);
+    color:var(--muted);font-size:13px;line-height:1.8}
+  @media (max-width:600px){
+    h1{font-size:25px}.wrap{padding:26px 16px 60px}
+    h2{font-size:20px}table{font-size:14px}
+  }
 </style>
 <script src="vendor/mermaid.min.js"></script>
-<script>document.addEventListener('DOMContentLoaded',()=>{mermaid.initialize({startOnLoad:true,theme:'default',securityLevel:'loose'});});</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.mermaid) {
+      mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+    }
+  });
+</script>
 </head>
 <body>
 <div class="wrap">
 
 <header class="hero">
-  <span class="eyebrow">概念关系 · 关系图谱</span>
+  <span class="eyebrow">概念关系图谱</span>
   <h1>Agent × 大模型的上下文 × Skill</h1>
-  <p class="one-line">三个概念不是孤立的——<strong>上下文决定 Agent 能跑多远</strong>，<strong>Skill 决定 Agent 能做多专</strong>。</p>
-  <p class="meta">由 concept-learner Skill 生成 · 人工核查与修改 · 2026-09-04</p>
+  <p class="one-line">三个概念不在同一层：<strong>上下文</strong>是工作台，<strong>Agent</strong>是干活的人，<strong>Skill</strong>是架子上随时可取的手册。</p>
+  <p class="scope"><strong>本文范围：</strong>只描述这三者在"单个 LLM 智能体系统"内部的分工与依赖关系。不展开多智能体协作、不讨论模型训练层面的上下文扩展技术。</p>
+  <p class="meta">由 concept-learner Skill 生成 · 人工核查于 2026-09-10</p>
 </header>
 
 <section>
   <h2>1. 一句话总结</h2>
   <ul>
-    <li><strong>Agent</strong> 是<strong>运行时</strong>——能推理、能调用工具、能循环；</li>
-    <li><strong>大模型的上下文</strong> 是 Agent 的<strong>物理瓶颈</strong>——决定它能"记住"多少、"看到"多长；</li>
-    <li><strong>Skill</strong> 是 Agent 的<strong>岗位手册</strong>——把"如何做某类事"打包成可复用的结构化指令。</li>
+    <li><strong>上下文是工作台</strong>——模型单次推理能看到的全部输入，也是它最贵的资源；</li>
+    <li><strong>Agent 是运行主体</strong>——在循环里读取上下文、决定动作、调用工具的那一方；</li>
+    <li><strong>Skill 是知识包</strong>——装在文件夹里的程序性知识，模型按需取用。</li>
   </ul>
+  <blockquote>
+    一句话串起来：<strong>上下文决定 Agent 能想多远，Skill 决定 Agent 能做多专。</strong>前者是能力的天花板，后者是专业度的来源。
+  </blockquote>
 </section>
 
 <section>
-  <h2>2. 总体关系图</h2>
+  <h2>2. 三者各自的定位</h2>
+  <table>
+    <thead><tr><th>概念</th><th>角色</th><th>回答什么问题</th><th>典型失效方式</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>大模型的上下文</strong></td>
+        <td>工作台 / 输入边界</td>
+        <td>这次推理，模型<strong>能看到什么</strong>？</td>
+        <td>窗口溢出导致请求失败；信息埋在中间被忽略；成本失控</td>
+      </tr>
+      <tr>
+        <td><strong>Agent</strong></td>
+        <td>运行主体 / 决策者</td>
+        <td>下一步<strong>该做什么</strong>？何时停？</td>
+        <td>错误累积；在多轮后偏离目标；自主行动带来不可控风险</td>
+      </tr>
+      <tr>
+        <td><strong>Skill</strong></td>
+        <td>知识包 / 能力封装</td>
+        <td>这类任务<strong>该怎么做</strong>？</td>
+        <td>description 没写好导致不触发或误触发；正文臃肿撑爆上下文</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>3. 整体关系：谁依赖谁</h2>
   <div class="mermaid-block">
-<pre class="mermaid">
-flowchart TB
-    subgraph Env["运行环境"]
-        Tools["工具集<br/>Search / Code / API / Browser"]
-        Memory["记忆系统<br/>短期 + 长期"]
-    end
-
-    subgraph Runtime["Agent 运行时"]
-        LLM["LLM 大脑<br/>推理 + 决策"]
-        Loop["控制器<br/>观察→规划→行动→反馈"]
-    end
-
-    subgraph Knowledge["知识与指令"]
-        Skill["Skill<br/>岗位手册"]
-        Prompt["Prompt<br/>即时指令"]
-    end
-
-    subgraph Physics["物理约束"]
-        Ctx["上下文窗口<br/>Token 容量"]
-        Cost["算力 / 显存"]
-    end
-
-    LLM -->|"受限于"| Ctx
-    Loop -->|"每一步塞入"| Ctx
-    Skill -->|"加载为上下文"| Ctx
-    Skill -.->|"指导"| Loop
-    Skill -.->|"扩展知识"| LLM
-    Loop -->|"调用"| Tools
-    Loop -->|"读写"| Memory
-    Ctx -->|"被 Cost 约束"| Cost
-
-    classDef runtime fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e3a8a
-    classDef knowledge fill:#f5f3ff,stroke:#7c3aed,stroke-width:2px,color:#3b2a6e
-    classDef physics fill:#fef3c7,stroke:#b45309,stroke-width:2px,color:#7c2d12
-    classDef env fill:#ecfdf5,stroke:#15803d,stroke-width:2px,color:#14532d
-
-    class LLM,Loop runtime
-    class Skill,Prompt knowledge
-    class Ctx,Cost physics
-    class Tools,Memory env
-</pre>
+    <div class="mermaid">
+graph TB
+    U["用户请求"] --> AG["Agent<br/>运行主体 · 循环决策"]
+    AG -->|"每一轮都要读"| CTX["上下文<br/>工作台 · 唯一输入"]
+    AG -->|"按需加载"| SK["Skill<br/>知识包 · 程序性知识"]
+    SK -.->|"触发后把指令注入"| CTX
+    CTX -.->|"可用预算限制"| AG
+    SK -.->|"提供专业流程"| AG
+    AG -->|"工具调用 · 环境反馈"| OUT["任务产出"]
+    OUT -.->|"结果写回"| CTX
+    </div>
   </div>
-  <p>关键观察：</p>
+  <p>这张图里有三条关键边，分别对应三种影响：</p>
   <ul>
-    <li><strong>Skill</strong> 和 <strong>Prompt</strong> 最终都会被加载进 <strong>上下文</strong>，参与 LLM 的推理；</li>
-    <li><strong>上下文</strong> 不是无限制的——它受 <strong>算力 / 显存</strong> 约束；</li>
-    <li><strong>Agent</strong> 的循环每一步都在"消耗"上下文（系统提示 + 历史动作 + 工具结果）。</li>
+    <li><strong>Agent → 上下文（实线，每轮都读）</strong>：Agent 无法直接"思考"，它的一切判断都基于上下文里的内容。上下文之外的东西，对它而言不存在。</li>
+    <li><strong>Skill → 上下文（虚线，触发后注入）</strong>：Skill 本身不是常驻的，它通过"触发 → 读取 SKILL.md → 内容进入上下文"这条路径产生影响。</li>
+    <li><strong>上下文 → Agent（虚线，预算约束）</strong>：上下文是<strong>有限且昂贵</strong>的，它反过来限制 Agent 能走多远。</li>
   </ul>
 </section>
 
 <section>
-  <h2>3. 上下文如何影响 Agent 的工作</h2>
+  <h2>4. 上下文如何影响 Agent 的工作</h2>
+  <p>很多人把"上下文"理解成一个中性的容器——装什么它就照单全收。实际不是。上下文从三个层面<strong>主动地</strong>塑造 Agent 的行为：</p>
 
-  <h3>3.1 影响的三个层面</h3>
   <div class="mermaid-block">
-<pre class="mermaid">
-flowchart LR
-    A["上下文窗口"] -->|"1. 信息密度"| B["Agent 能"看到"什么"]
-    A -->|"2. 决策可靠性"| C["Agent 决策的稳定性"]
-    A -->|"3. 循环长度"| D["Agent 能连续做几步"]
-    B --> E["任务质量"]
-    C --> E
-    D --> F["任务复杂度"]
-</pre>
+    <div class="mermaid">
+graph LR
+    CTX["上下文"] --> CAP["① 容量层面<br/>窗口是硬上限<br/>塞不下 → 请求直接失败"]
+    CTX --> QUA["② 质量层面<br/>Lost in the Middle<br/>中间的信息容易被忽略"]
+    CTX --> COST["③ 成本层面<br/>注意力开销随长度<br/>增长快于线性"]
+    CAP --> B1["Agent 被迫裁剪历史<br/>可能丢掉关键线索"]
+    QUA --> B2["Agent 用错信息<br/>或漏掉已有的依据"]
+    COST --> B3["长循环不可行<br/>只能早早收尾"]
+    B1 --> BEH["Agent 的实际行为"]
+    B2 --> BEH
+    B3 --> BEH
+    </div>
   </div>
 
-  <h3>3.2 具体表现</h3>
-  <table>
-    <thead>
-      <tr><th>窗口表现</th><th>Agent 的工作影响</th><th>工程对策</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>窗口太小（如 4K）</td>
-        <td>多轮对话失忆；长代码任务必须切片；Agent 循环跑不到 5 步就崩</td>
-        <td>RAG 压缩信息；短期记忆摘要；限制单步长度</td>
-      </tr>
-      <tr>
-        <td>窗口适中（如 32K-128K）</td>
-        <td>能装下中等代码库；中等复杂任务够用；Agent 循环可跑到 10-20 步</td>
-        <td>默认大多数 Agent 的工作区间</td>
-      </tr>
-      <tr>
-        <td>窗口很大（如 1M+）</td>
-        <td>能装整本书 / 整部电影；Agent 循环可跑 50+ 步；但<strong>Lost in the Middle</strong> 出现</td>
-        <td>重要信息放开头 / 结尾；用结构化提示；必要时配合 RAG</td>
-      </tr>
-    </tbody>
-  </table>
+  <h3>① 容量：硬性天花板</h3>
+  <p>窗口是硬约束。超出就直接失败，没有"将就一下"的余地。更隐蔽的影响是：Agent 会为了腾出空间而裁剪历史，而<strong>被裁掉的那一段里，可能正好有它后面要用的线索</strong>。</p>
 
-  <div class="callout-good card">
-    <p><strong>关键洞察</strong>：上下文窗口 <strong>≠ 有效信息量</strong>。窗口大只是"能装"，能不能用好要看位置编码泛化能力（RoPE / YaRN）、任务设计（重要信息摆放位置）、以及 KV Cache 工程优化。</p>
-  </div>
+  <h3>② 质量：能放进去 ≠ 能用上</h3>
+  <p>Liu 等人（TACL 2023）的实验显示，相关信息位于上下文<strong>开头或结尾</strong>时表现最好，位于<strong>中间</strong>时显著下降——即使在标称支持长上下文的模型上也是如此。这意味着 Agent 的失败常常不是"它不知道"，而是<strong>"信息就在上下文里，但它没取用"</strong>。</p>
+  <p>这条对 Agent 尤其致命：Agent 是循环的，中间步骤的工具返回值往往就落在上下文的"中间地带"。如果它在第 8 步忽略了第 4 步取回的关键信息，后面的推理就会建立在错误前提上——<strong>这正是"多轮之后开始跑偏"的常见机制。</strong>Anthropic 用"上下文腐烂"（Context Rot）描述这种随 token 增加而单调下降的召回能力。</p>
+
+  <h3>③ 成本：越长的上下文越贵</h3>
+  <p>自注意力要求每个 token 与所有 token 计算关联，开销随长度按平方级增长。所以"多跑几轮、每轮都带上完整历史"这种朴素做法，成本会迅速变得不可接受。这也是压缩、子智能体隔离上下文、把中间结果写进文件这些手段存在的理由。</p>
+
+  <blockquote>
+    我的结论：<strong>把上下文当作"带边际收益递减的稀缺资源"来管，而不是当作免费的记事本。</strong>Agent 的可靠性问题，很大一部分其实是上下文管理问题。
+  </blockquote>
 </section>
 
 <section>
-  <h2>4. Skill 如何沉淀可复用的任务知识</h2>
+  <h2>5. Skill 如何沉淀可复用的任务知识</h2>
+  <p>Skill 要解决的是：<strong>同一个团队反复交代同一套做法，但每次对话都是全新的。</strong>prompt 是一次性的，说完就散；Skill 把它沉淀成文件，从此可按需取用。</p>
 
-  <h3>4.1 Skill 沉淀的"知识"长什么样</h3>
   <div class="mermaid-block">
-<pre class="mermaid">
-flowchart TB
-    subgraph Personal["个人 Prompt（一次性）"]
-        P1["每次对话重新写"]
-        P2["散落在聊天记录里"]
-        P3["无法跨 Agent 复用"]
-    end
-
-    subgraph Skill["Skill（沉淀后）"]
-        S1["一份 SKILL.md 永久生效"]
-        S2["可装进任意 Agent"]
-        S3["含 scripts / references / assets"]
-    end
-
-    subgraph Org["团队 / 开源 Skill（规模化后）"]
-        O1["Git 仓库管理"]
-        O2["语义触发，无需记忆命令"]
-        O3["形成组织的过程资产"]
-    end
-
-    Personal -->|"写一次"| Skill
-    Skill -->|"提交到 Git"| Org
-</pre>
-  </div>
-
-  <h3>4.2 Skill 沉淀了哪些类型的知识</h3>
-  <table>
-    <thead>
-      <tr><th>知识类型</th><th>在 Skill 里的载体</th><th>例子</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>领域术语 / 概念库</strong></td>
-        <td>SKILL.md 正文 + references/</td>
-        <td>本仓库的 <code>concept-learner</code> Skill 就沉淀了"如何系统学一个概念"的方法论</td>
-      </tr>
-      <tr>
-        <td><strong>工作流 SOP</strong></td>
-        <td>SKILL.md 的"执行流程"章节</td>
-        <td>"客户投诉" Skill：先查订单 → 看历史 → 升级条件判断 → 通知</td>
-      </tr>
-      <tr>
-        <td><strong>工具脚本（确定性操作）</strong></td>
-        <td>scripts/ 下的 Python / Bash</td>
-        <td>"PDF 处理" Skill：<code>pdf_rotate.py</code>、<code>pdf_merge.py</code></td>
-      </tr>
-      <tr>
-        <td><strong>领域参考资料</strong></td>
-        <td>references/ 下的 Markdown</td>
-        <td>"SQL 调优" Skill：references/ 下放公司数据库 schema、历史慢查询案例</td>
-      </tr>
-      <tr>
-        <td><strong>输出模板</strong></td>
-        <td>assets/ 下的 PPT / HTML / Frontend 模板</td>
-        <td>"周报" Skill：assets/ 下放标准周报模板</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="callout-good card">
-    <p><strong>关键洞察</strong>：Skill 的真正价值不是"让 Agent 更聪明"，而是<strong>把团队 / 个人的隐性知识变成显性资产</strong>。一个好的 Skill 写一次，能被几十个 Agent / 项目复用几个月 / 几年。</p>
-  </div>
-</section>
-
-<section>
-  <h2>5. 三者的协同工作流</h2>
-  <p>用一个真实例子（Cursor 编程 Agent）把三者串起来：</p>
-  <div class="mermaid-block">
-<pre class="mermaid">
+    <div class="mermaid">
 sequenceDiagram
+    autonumber
     participant U as 用户
-    participant A as Agent<br/>(Cursor Composer)
-    participant S as Skill<br/>(代码规范 + 团队约定)
-    participant L as LLM<br/>(推理内核)
-    participant C as 上下文窗口<br/>(200K Token)
-    participant T as 工具<br/>(Read/Edit/Bash)
+    participant SP as 系统提示
+    participant AG as Agent
+    participant SK as Skill 目录
 
-    U->>A: "把 login.py 改健壮点"
-    A->>S: 语义匹配触发
-    S->>C: 加载 SKILL.md<br/>(团队代码规范 + 审查清单)
-    A->>L: 把 Skill + 用户请求<br/>+ 仓库结构塞入上下文
-    L-->>A: 推理：要先读 login.py
-    A->>T: Read(login.py)
-    T-->>A: 返回文件内容（塞入上下文）
-    L-->>A: 推理：password 字段没 trim()
-    A->>T: Edit(login.py, 加上 trim())
-    T-->>A: 修改完成
-    A->>T: Bash(跑测试)
-    T-->>A: 测试通过
-    A->>U: 输出修改总结
-</pre>
+    Note over SP: 启动时：每个 Skill<br/>只加载 name + description<br/>（约 100 token/个）
+    U->>AG: "帮我生成这周的周报"
+    AG->>SP: 拿请求去匹配各 Skill 的 description
+    SP-->>AG: 命中 weekly-report
+    AG->>SK: bash 读取 SKILL.md
+    SK-->>AG: 返回核心步骤（<5k token）
+    Note over AG: 指令进入上下文，开始执行
+    AG->>SK: 仅在需要核对口径时，读 references/kpi.md
+    SK-->>AG: 返回该文件片段
+    AG->>SK: 运行 scripts/aggregate.py
+    SK-->>AG: 只返回运行结果<br/>（脚本代码不进上下文）
+    AG-->>U: 输出周报
+    </div>
   </div>
-  <p>三个概念各自扮演的角色：</p>
-  <ul>
-    <li><strong>Skill</strong> 在第 3-4 步登场：把"团队代码规范"注入上下文，让 Agent 知道"健壮"对你意味着什么；</li>
-    <li><strong>上下文窗口</strong> 在每一步都被消耗：系统提示 + Skill + 历史 + 工具结果 都要装得下；</li>
-    <li><strong>Agent</strong> 是整个流程的<strong>调度者</strong>——它决定"现在该干什么"、"该调哪个工具"、"什么时候停"。</li>
-  </ul>
+
+  <p>这张时序图里有四个设计要点，我认为是 Skill 最值得学的地方：</p>
+  <ol>
+    <li><strong>知识在没被用到时不占任何上下文。</strong>启动时只有一行简介常驻，这是"装几百个 Skill"仍然可行的原因。</li>
+    <li><strong>触发靠 description，不靠用户敲命令。</strong>所以 description 必须同时写清"能做什么"和"何时用它"——这是 Skill 会不会被自动用起来的决定性因素。</li>
+    <li><strong>用文件边界切分"总是需要"和"偶尔需要"。</strong>核心流程留在 <code>SKILL.md</code>，细则移到 <code>references/</code>。Anthropic 的 PDF Skill 就是把这招用在表单填写说明上的。</li>
+    <li><strong>确定性操作交给脚本。</strong>脚本代码不进入上下文，只有输出进入——既省 token，又比让模型逐步计算更可靠。</li>
+  </ol>
+
+  <blockquote>
+    所以我理解 Skill 的本质不是"存知识"，而是<strong>按使用频率给知识分层，再用文件系统的边界把层次固定下来</strong>。它是给 Agent 用的、可版本管理的程序性记忆。
+  </blockquote>
 </section>
 
 <section>
-  <h2>6. 易混淆边界速查表</h2>
+  <h2>6. 常见误解</h2>
   <table>
-    <thead>
-      <tr><th>对比维度</th><th>Agent</th><th>大模型的上下文</th><th>Skill</th></tr>
-    </thead>
+    <thead><tr><th>误解</th><th>为什么错</th><th>更准确的说法</th></tr></thead>
     <tbody>
       <tr>
-        <td><strong>本质</strong></td>
-        <td>运行时（runtime）</td>
-        <td>物理容量（capacity）</td>
-        <td>指令包（instruction package）</td>
+        <td>"上下文窗口越大，Agent 越强"</td>
+        <td>窗口只解决"装得下"，解决不了"找得到"和"用得起"。长上下文里准确取用会下降，成本还会陡增</td>
+        <td>窗口是必要条件，不是充分条件。<strong>上下文的组织方式比容量更影响表现</strong></td>
       </tr>
       <tr>
-        <td><strong>形态</strong></td>
-        <td>软件 / Agent SDK</td>
-        <td>数字（Token 数）</td>
-        <td>Markdown 文件（SKILL.md）</td>
+        <td>"Agent 只要模型够强就行"</td>
+        <td>控制流、工具设计、反馈回路才是 Agent 区别于单次调用的本质；工具描述含糊时，强模型同样选错工具</td>
+        <td>Agent 是<strong>架构选择</strong>。模型是其中一个变量，不是全部</td>
       </tr>
       <tr>
-        <td><strong>谁来用</strong></td>
-        <td>开发者 / 用户</td>
-        <td>LLM 内部</td>
-        <td>Agent 内部</td>
+        <td>"Skill 就是写得更规范的 prompt"</td>
+        <td>漏掉了按需加载、文件系统结构、捆绑脚本这几个关键差异</td>
+        <td>Skill 是<strong>可复用、分层加载、可版本管理的能力包</strong>；prompt 是对话级的一次性指令</td>
       </tr>
       <tr>
-        <td><strong>类比</strong></td>
-        <td>员工本人</td>
-        <td>员工的工作记忆容量</td>
-        <td>员工的岗位手册</td>
+        <td>"有了 Skill 就不需要 MCP 了"（或反过来）</td>
+        <td>两者解决的问题不同：一个管"会不会做"，一个管"连不连得上"</td>
+        <td>MCP 是<strong>连接协议</strong>，Skill 是<strong>知识封装</strong>，实践中常配合使用</td>
       </tr>
       <tr>
-        <td><strong>边界</strong></td>
-        <td>Agent ≠ Workflow；Agent ≠ Copilot</td>
-        <td>窗口 ≠ Token 数；大 ≠ 信息全用得上</td>
-        <td>Skill ≠ Agent；Skill ≠ Command；Skill ≠ MCP</td>
+        <td>"Skill 内容写得越全越好"</td>
+        <td>正文一旦触发就整体进入上下文，越臃肿越稀释关键指令，等于放弃了渐进式披露的收益</td>
+        <td>按使用频率分层：<strong>常用的留在正文，偶尔用的搬出去</strong></td>
       </tr>
     </tbody>
   </table>
 </section>
 
 <section>
-  <h2>7. 实践建议</h2>
-  <ol>
-    <li><strong>做 Agent 之前</strong>，先想清楚<strong>上下文够不够</strong>——多轮 / 长任务的 Agent 必须配大窗口或 RAG；</li>
-    <li><strong>做 Skill 之前</strong>，先想清楚<strong>沉淀什么知识</strong>——一次性 prompt 不要做成 Skill，只有"会反复用的方法"才值得；</li>
-    <li><strong>三个一起用</strong>：让 Agent 跑、让上下文扛住、让 Skill 注入专业能力——三者缺一不可。</li>
-  </ol>
+  <h2>7. 自测题</h2>
+  <p>3–5 道，难度递增。先自己想，再展开答案。</p>
+
+  <h3><span class="stars">★</span> 第 1 题 · 记忆</h3>
+  <p>用一句话分别说明上下文、Agent、Skill 在这套体系里的角色。</p>
+  <details><summary>查看答案</summary>
+    <p>· <strong>上下文</strong>是<strong>工作台</strong>——模型单次推理能看到的全部输入，也是它最贵的资源；<br>
+    · <strong>Agent</strong> 是<strong>运行主体</strong>——在循环中读取上下文、决定动作、调用工具的那一方；<br>
+    · <strong>Skill</strong> 是<strong>知识包</strong>——装在文件夹里的程序性知识，模型按需取用。<br>
+    <em>为什么值得背这三句：</em>因为它们分别回答了"能看到什么""该做什么""该怎么做"三个不同层次的问题——混淆层次是理解这三者时最常见的错误。</p>
+  </details>
+
+  <h3><span class="stars">★★</span> 第 2 题 · 理解</h3>
+  <p>为什么说"上下文决定 Agent 能跑多远"？请从机制上解释，不要只说"因为窗口有限"。</p>
+  <details><summary>查看答案</summary>
+    <p>"窗口有限"只是第一层。完整地看，上下文从三个机制上限制 Agent：<br>
+    <strong>① 容量上限</strong>——超出窗口请求直接失败，没有折中空间。这迫使 Agent 裁剪历史，而裁掉的部分可能正是后面要用的线索。<br>
+    <strong>② 取用质量随长度下降</strong>——Lost in the Middle 表明，位于上下文中间的信息容易被忽略。Agent 是循环结构，中间步骤的工具返回值恰好落在"中间地带"，一旦被忽略，后续推理就建立在错误前提上——这正是"多轮之后开始跑偏"的典型机制。<br>
+    <strong>③ 成本随长度增长快于线性</strong>——自注意力开销近似随序列长度平方增长，"每轮都带完整历史"的做法会迅速变得不可承担，于是长循环在经济上不可行。<br>
+    <em>所以更准确的说法是：</em>上下文不只是"天花板"，它还通过<strong>降低取用质量</strong>和<strong>抬高成本</strong>这两种方式，主动地塑造 Agent 会怎么做。</p>
+  </details>
+
+  <h3><span class="stars">★★★</span> 第 3 题 · 应用</h3>
+  <p>你做了一个 Agent，前 7 步都正常，到第 8 步之后开始反复出错。从这三个概念的角度，你怀疑哪些原因？按什么顺序排查？</p>
+  <details><summary>查看答案</summary>
+    <p><strong>最可疑的方向是上下文，其次是循环设计，最后才是模型能力。</strong>建议排查顺序：<br>
+    <strong>① 先查上下文（最可能）</strong>——前几步正常说明模型能力够用。第 8 步开始出错，典型原因是<strong>中间步骤的工具返回值落到了上下文的"中间地带"被忽略</strong>（Lost in the Middle），或者上下文里累积了过量的低信号内容，把关键信息稀释掉了，也可能触发了压缩机制导致早期关键约束被总结丢失。<br>
+    <strong>做法：</strong>把第 8 步前后的完整上下文打出来看——关键约束还在不在？在第几位？如果把关键信息挪到开头或结尾重跑，结果是否改善？<br>
+    <strong>② 再查循环设计</strong>——有没有设置停止条件？第 8 步附近是否进入了某种重复模式（例如反复调同一个工具）？错误是否在累积放大？<br>
+    <strong>③ 然后查 Skill（如果有）</strong>——如果该任务依赖某个 Skill，检查它是否在第 8 步之后没有被正确触发，或正文里的指令是否被后续上下文淹没。<br>
+    <strong>④ 最后才考虑换模型。</strong>把换模型作为第一反应，往往会掩盖真正的工程问题。<br>
+    <em>这道题的关键判断：</em>"前几步正常"这个信息本身就排除了"模型能力不足"这一大类解释，把矛头指向了随轮次累积的上下文状态。</p>
+  </details>
+
+  <h3><span class="stars">★★★★</span> 第 4 题 · 辨析</h3>
+  <p>Skill 和 MCP 是什么关系？请构造一个需要两者配合的场景，并说明各自承担什么。</p>
+  <details><summary>查看答案</summary>
+    <p><strong>关系：层次不同、不互相替代。</strong>MCP 是<strong>连接协议</strong>，解决"Agent 够不够得着"外部系统的问题——它把工具、数据源、服务以标准方式暴露给 Agent。<strong>Skill 是知识封装</strong>，解决"这类任务该怎么做"的问题——它把流程、口径、最佳实践打成可复用的包。一个是<strong>接口层</strong>，一个是<strong>知识层</strong>。<br>
+    <strong>配合场景——"数据周报助手"：</strong><br>
+    · <strong>MCP 负责连得上：</strong>通过 MCP 把数据仓库、BI 系统、邮件服务接入 Agent，让它有能力查询数据、拉取图表、发送邮件。<br>
+    · <strong>Skill 负责会做：</strong>用一个 <code>weekly-report</code> Skill 规定——该查哪几张表、时间范围怎么取、指标口径对照 <code>references/kpi.md</code>、聚合计算跑 <code>scripts/aggregate.py</code>、输出的版式规范是什么。<br>
+    <strong>如果只有 MCP 没有 Skill：</strong>Agent 连得上数据库，但每次都要重新摸索该查什么、怎么算，口径可能每次都不一样。<br>
+    <strong>如果只有 Skill 没有 MCP：</strong>Agent 知道流程，但拿不到数据，只能干说步骤。<br>
+    <em>一句话区分：</em>MCP 让 Agent"够得着"，Skill 让 Agent"做对路"。这也是为什么两者在实践中通常是叠加使用，而不是二选一。</p>
+  </details>
+
+  <h3><span class="stars">★★★★★</span> 第 5 题 · 综合</h3>
+  <p>设计一个"合同审阅助手"（输入一份可能上百页的合同，输出风险点清单）。请说明上下文、Agent、Skill 三者各承担什么角色，并给出你的上下文开销控制方案。</p>
+  <details><summary>查看答案</summary>
+    <p><strong>角色分工：</strong><br>
+    · <strong>Agent＝运行主体。</strong>它是循环的：定位条款 → 比对规则 → 标记风险 → 复核 → 汇总。它决定下一步读哪一段、要不要再查一遍、什么时候收尾。<br>
+    · <strong>上下文＝工作台，也是最需要精打细算的资源。</strong>合同上百页，绝不可能整份放进上下文——不仅超窗口风险高，还会因 Lost in the Middle 让关键条款被淹没。<br>
+    · <strong>Skill＝知识包。</strong>把"怎么审合同"沉淀下来：审查维度、风险分级标准、输出格式、以及公司特有的红线条款。<br><br>
+    <strong>具体设计：</strong><br>
+    <strong>① Skill 侧（分层）：</strong><br>
+    · <code>SKILL.md</code> 只放核心流程与输出规范（常用的，留在正文）；<br>
+    · <code>references/risk-rules.md</code> 放完整风险规则库与公司红线条款（体量大、按需查）；<br>
+    · <code>references/output-format.md</code> 放不同受众的报告模板（仅特定场景需要）；<br>
+    · <code>scripts/</code> 放确定性操作，如按条款编号切分文档、统计风险条目、格式校验。<br>
+    <strong>② 上下文侧（按需加载 + 隔离）：</strong><br>
+    · <strong>不整份读入</strong>——先用脚本或检索定位候选条款，只把命中的段落拉进上下文；<br>
+    · <strong>用文件当外部记忆</strong>——每审完一节，把结论写进中间文件，而不是全部堆在对话历史里；<br>
+    · <strong>子智能体隔离</strong>——大范围筛查派子智能体去做，只让它把<strong>相关片段</strong>返回主流程，避免把整份材料的上下文带回来；<br>
+    · <strong>压缩与缓存</strong>——稳定的系统提示、规则库前几节做缓存；对话变长时对早期轮次做总结压缩。<br>
+    <strong>③ Agent 侧（控制流）：</strong><br>
+    · 设计明确停止条件（如已覆盖全部条款类别或达到最大轮次）；<br>
+    · 关键判断（是否触发红线）保留人工复核环节——合同场景的误判代价高，不能完全交给自主循环。<br><br>
+    <strong>④ 位置优化：</strong>汇总阶段把<strong>最高风险项放在输出的开头</strong>，规则约束放在提示的开头与结尾，避开容易被忽略的中间位置。<br><br>
+    <em>这道题想通的标志：</em>你会发现"上下文开销控制"不是单点技巧，而是 Skill 分层设计 + Agent 循环设计 + 按需加载三者协同的结果——这正是三个概念互相咬合的地方。</p>
+  </details>
+</section>
+
+<section>
+  <h2>8. 参考来源</h2>
+  <ul class="refs">
+    <li><a href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank" rel="noopener">Building effective agents — Anthropic</a><br>
+      <span class="src">Agent 的架构定义、Workflow 与 Agent 的区分、适用场景与设计原则 · 访问于 2026-09-10</span></li>
+    <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener">Effective context engineering for AI agents — Anthropic</a><br>
+      <span class="src">"注意力预算"与"上下文腐烂"，以及 just-in-time 检索、压缩、子智能体等手段 · 访问于 2026-09-10</span></li>
+    <li><a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener">Lost in the Middle: How Language Models Use Long Contexts (Liu et al., TACL 2023)</a><br>
+      <span class="src">U 型位置偏差的原始受控实验，支撑"上下文影响 Agent 取用质量"这一判断 · 访问于 2026-09-10</span></li>
+    <li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" target="_blank" rel="noopener">Equipping agents for the real world with Agent Skills — Anthropic</a><br>
+      <span class="src">Skill 的定义、渐进式披露三级结构、PDF Skill 案例 · 访问于 2026-09-10</span></li>
+    <li><a href="https://agentskills.io/home" target="_blank" rel="noopener">Agent Skills — 开放标准站点</a><br>
+      <span class="src">Skill 格式规范与 Discovery / Activation / Execution 三阶段机制 · 访问于 2026-09-10</span></li>
+    <li><a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">Model Context Protocol — 官方站点</a><br>
+      <span class="src">MCP 作为连接协议的标准说明，用于对比 Skill 与 MCP 的分工 · 访问于 2026-09-10</span></li>
+  </ul>
+  <p class="meta">以上链接在生成时均已做 HTTP 可访问性验证（返回 200）。</p>
 </section>
 
 <footer>
-  由 concept-learner Skill 生成于 2026-09-04 · Mermaid 图由 <a href="https://mermaid.js.org/" target="_blank" rel="noopener">mermaid.js</a> 渲染 · 内容经过人工核查与修改（核对 Mermaid 语法、补充"上下文 3 层面影响"、增加实战流程图） · 反馈请开 issue。
+  本文件由 <code>concept-learner</code> Skill 生成于 2026-09-10，随后经人工阅读、核查与修改。<br>
+  本章 Mermaid 关系图使用仓库内 <code>vendor/mermaid.min.js</code> 本地渲染，不依赖外部 CDN。<br>
+  引用来源均为公开可访问页面；如发现链接失效或表述有误，欢迎提 issue 更正。
 </footer>
 
 </div>
