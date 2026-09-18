@@ -1,24 +1,31 @@
 # workbuddy-skills
 
-> 一个 WorkBuddy 项目级 Skill 仓库：内置 `concept-learner` Skill —— 输入任意概念名，输出一份**结构化的、可核查的** HTML 学习指南。
+> 一个 WorkBuddy 项目级 Skill 仓库：内置两个 Skill —— `concept-learner`（输入任意概念名，输出一份**结构化的、可核查的** HTML 学习指南）与 `push-to-github`（把本地改动提交并推送到 GitHub 仓库，并在推送后**校验远程与本地是否真的一致**）。
 
 ---
 
 ## 一、仓库用途
 
-这个仓库要解决的问题是：**每学一个新概念，都要从零整理一遍资料。**
+这个仓库解决的问题有两个。
 
-它把"学一个概念"这件事沉淀成一套可复用的流程：
+**其一：每学一个新概念，都要从零整理一遍资料。** 把"学一个概念"沉淀成一套可复用的流程：
 
-- **一个通用 Skill**（`concept-learner`）——不是为某三个概念写的一次性提示词，而是接受**任意概念**（中英文不限）作为输入；
+- **一个通用 Skill**（`concept-learner`）——不是为某几个概念写的一次性提示词，而是接受**任意概念**（中英文不限）作为输入；
 - **四份示范产出**——三份概念学习资料 + 一份概念关系图谱，展示 Skill 实际产出长什么样；
 - **一套自检规范**——从资料源核查、章节结构到自测题设计，都有明确的硬性要求。
+
+**其二：东西改完了，但不确定远程到底长什么样。** 这一层由 `push-to-github` 承接：
+
+- **一个推送 Skill**（`push-to-github`）——把本地项目或新建的项目级 Skill **显式**提交、推送（不用 `git add -A`），并在推送后做**三源交叉校验**：远程 tip / 本地 `HEAD` / GitHub API 文件树**逐 blob 比对哈希**；
+- **一份踩坑速查表**（`references/troubleshooting.md`）——本机实测过的证书吊销报错、curl 无法写文件、"本地缓存过期导致看起来像推送丢了"等问题的解法；
+- **一个可执行校验脚本**（`scripts/verify_push.py`）——纯标准库，一条命令给出"远程与本地是否完全一致"的结论。
 
 适用场景：
 
 - 想系统学习某个技术概念，并留下一份可分享、可回顾的资料；
 - 团队沉淀"概念入门手册"，新人可以照着自学；
-- 想给 WorkBuddy 写项目级 Skill，需要一个完整可参考的例子。
+- 想把本地产出交付到 GitHub 仓库，并且需要一个"推完能自查"的流程；
+- 想给 WorkBuddy 写项目级 Skill，需要一个完整可参考的例子——本仓两个 Skill 都是。
 
 ---
 
@@ -30,10 +37,16 @@
 workbuddy-skills/
 ├── .workbuddy/
 │   └── skills/
-│       └── concept-learner/          ← 你的 Skill
-│           ├── SKILL.md              ← 入口：YAML 元数据 + 完整工作流
-│           └── references/
-│               └── template.html     ← 8 章节 HTML 模板
+│       ├── concept-learner/           ← Skill 1：概念学习资料生成
+│       │   ├── SKILL.md               ← 入口：YAML 元数据 + 完整工作流
+│       │   └── references/
+│       │       └── template.html      ← 8 章节 HTML 模板
+│       └── push-to-github/            ← Skill 2：推送至 GitHub 仓库
+│           ├── SKILL.md               ← 入口：六段契约 + Step 0–9
+│           ├── references/
+│           │   └── troubleshooting.md ← 本机实测踩坑与一页诊断命令
+│           └── scripts/
+│               └── verify_push.py     ← 推送后三源交叉校验（纯标准库）
 ├── learning-materials/
 │   ├── agent.html
 │   ├── llm-context.html
@@ -45,22 +58,31 @@ workbuddy-skills/
 └── .gitignore
 ```
 
-**`SKILL.md` 的结构**（六段契约，缺一不可）：
+**`SKILL.md` 的结构**（六段契约，本仓所有 Skill 都遵守，缺一不可）：
 
 | 段落 | 内容 |
 | --- | --- |
 | 一、适用场景 | 什么时候触发、什么时候不触发、边界在哪 |
-| 二、输入信息 | `concept`（必填）+ `audience` / `focus` / `output_dir` / `slug`（可选） |
-| 三、生成步骤 | Step 1–10，从划定范围到自检，每步不可跳过 |
-| 四、输出结构 | 8 个章节的顺序与内容要求 |
-| 五、资料来源要求 | **只引用官方来源**（官方文档 / 官方博客 / 官方仓库 / 标准规范 / 论文原文），逐条验证可访问性，标注访问日期，条数不限 |
-| 六、自检要求 | 14 项强制清单，未通过不得交付 |
+| 二、输入信息 | 必填字段、可选字段，以及字段有歧义时该问谁 |
+| 三、执行步骤 | 编号 Step，每步不可跳过 |
+| 四、输出结构 | 交付物必须包含哪几项 |
+| 五、硬性要求 | 本领域不可妥协的规范（资料来源 / 凭据安全 ……） |
+| 六、自检清单 | 强制勾选项，未通过不得交付 |
+
+两个 Skill 的输入字段：
+
+| Skill | 必填 | 可选 |
+| --- | --- | --- |
+| `concept-learner` | `concept` | `audience` / `focus` / `output_dir` / `slug` |
+| `push-to-github` | `repo_url` | `paths` / `branch` / `message` / `mode`（`push` ｜ `verify` ｜ `dry-run`） |
 
 ---
 
-## 三、如何在 WorkBuddy 中调用它
+## 三、如何在 WorkBuddy 中调用它们
 
-在 WorkBuddy 中打开本仓库目录（`C:\Users\zay\Desktop\workbuddy-skills`）后，它会自动发现 `.workbuddy/skills/` 下的项目级 Skill。然后任意一种说法都能触发：
+在 WorkBuddy 中打开本仓库目录（`C:\Users\zay\Desktop\workbuddy-skills`）后，它会自动发现 `.workbuddy/skills/` 下的项目级 Skill。然后任意一种说法都能触发。
+
+### Skill 1 · concept-learner
 
 **方式 1 · 显式点名**
 
@@ -82,9 +104,38 @@ workbuddy-skills/
 
 **输出位置**：`learning-materials/<slug>.html`，单文件、内嵌 CSS，双击即可在浏览器打开。
 
+### Skill 2 · push-to-github
+
+同一套触发方式：
+
+> 用 push-to-github 把这次的改动推到 workbuddy-skills
+>
+> /push-to-github
+>
+> 帮我提交并推送，然后确认远程和本地内容一致
+
+它和"随手敲几条 git 命令"的区别在**三处硬约束**：
+
+1. **不信口述的仓库信息**——默认分支、真实 `owner` 都先用 API 读一遍再动手（用户名笔误是真实发生过的事）；
+2. **显式指定提交路径，不用 `git add -A`**——工作副本里常年躺着 `01.py`、随手建的空文件，一把梭会全部推上公开仓库。Skill 会先 `git status --porcelain` 逐条分类，把"不提交的东西"明确列出来；
+3. **推送后必须三源校验**——只比"提交 SHA 相同"不足以说明问题，要逐 blob 比对文件哈希。
+
+**输出**：提交清单 → 提交 SHA → 三源校验结论 → **本次未提交的文件及原因**。
+
+推送后单独自查（纯标准库，无需安装依赖）：
+
+```bash
+cd C:/Users/zay/Desktop/workbuddy-skills
+python .workbuddy/skills/push-to-github/scripts/verify_push.py
+```
+
+退出码 `0` = 远程与本地完全一致；`1` = 有差异（会列出仅本地、仅远程、内容不一致三类文件）；`2` = 网络或环境原因没校验完。
+
 ---
 
 ## 四、已生成的学习资料
+
+> 本节内容全部由 `concept-learner` 产出。
 
 | 文件 | 概念 | 核心内容 |
 | --- | --- | --- |
@@ -185,13 +236,23 @@ workbuddy-skills/
 
 本仓库的写作是"AI 起草 + 人工核查修改"完成的。核查的重点放在**事实层**（链接是否可访问、表述是否与原文一致、结论是否有来源支撑）；"个人解释"部分虽然由 AI 起草，但结构（类比 / 反例 / 误解）和观点是人工确认后才保留的。
 
+### `push-to-github` 的分工
+
+| 项 | 说明 |
+| --- | --- |
+| AI 做了什么 | 起草 SKILL.md / 踩坑速查表 / 校验脚本；执行工作区清点、敏感信息扫描、选择性暂存与提交 |
+| 人工做了什么 | 划定 Skill 范围（只管"提交—推送—校验"，建仓与仓库可见性由人决定）；确认"不提交散落临时文件"与"凭据只进 local config"两条硬约束 |
+| 为什么把校验单独做成脚本 | "推送成功"是**工具自报的结果**，不足为凭。本机实测过 `git update-ref` 返回 0 却没落盘、`Start-Process -Wait` 返回 1 但安装其实成功——退出码会骗人，所以结论必须来自独立数据源 |
+
 ---
 
 ## 六、版本与安全
 
 - **不提交任何敏感信息**：无 API Key、无密码、无个人隐私文件。`.gitignore` 中已排除 `.env*`、`*.pem`、`*.key`、`secrets/` 等常见敏感文件类型；
 - **文中提到的凭据**：仓库内容中不含任何访问令牌（token）；
-- **环境依赖**：唯一的外部依赖是 `learning-materials/vendor/mermaid.min.js`，已随仓库提交，确保离线可渲染。
+- **提交前扫描**：`push-to-github` 每次提交前跑一遍模式扫描（`ghp_*` / `github_pat_*` / `sk-*` / 私钥头），命中即停止提交；
+- **本地 `.git/config` 里的凭据**：若 remote URL 中拼接了 PAT，它会**明文**保存在 `.git/config`。该文件不被 Git 追踪，但会随目录拷贝 / 备份一起扩散——不要把它打包进任何交付物，用完及时 revoke；
+- **环境依赖**：唯一的外部依赖是 `learning-materials/vendor/mermaid.min.js`，已随仓库提交，确保离线可渲染。`push-to-github` 的校验脚本只依赖 Python 标准库。
 
 ---
 
